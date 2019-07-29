@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>React</title>
+</head>
+
+<body>
+    <div id="root"></div>
+           
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <script type="text/babel">
+        class MyComponent extends React.Component {
+           state = {
+               counter: 0,
+               name: '',
+               lastName: ''
+           }
+
+           handleClick = () => {
+               this.setState(prevState => ({
+                   counter: prevState.counter + 1                   
+               }));
+           }
+
+           handleChange = (key, value) => {
+               this.setState({
+                   [key]: value
+               });
+           }
+           
+           render() {
+               const { counter, name, lastName } = this.state;
+               return (
+                    <div>                        
+                        <p>Contador: {counter}</p>                   
+                        <button onClick={this.handleClick}>
+                            Clique aqui
+                        </button>
+                        <hr />
+                        <div>
+                            <input 
+                                type="text"
+                                value={name}
+                                onChange={(event) => {
+                                    this.handleChange(
+                                        "name",
+                                        event.target.value);                                    
+                                }}
+                             />
+                             <input 
+                                type="text"
+                                value={lastName}
+                                onChange={(event) => {
+                                    this.handleChange(
+                                        "lastName",
+                                        event.target.value);                                    
+                                }}
+                             />
+                            <p>
+                                {lastName}
+                                {name && lastName && ', '} 
+                                {name}
+                            </p>
+                            <button
+                                onClick={() => {
+                                    this.setState({
+                                        name: 'Bruno',
+                                        lastName: 'Nardini'
+                                    });
+                                }}                            
+                            >
+                                Professor
+                            </button>
+                        </div>
+                    </div>
+                );
+           }
+        }        
+
+        ReactDOM.render(
+            <MyComponent />,
+            document.getElementById("root")
+        );
+    </script>    
+</body>
+
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>React</title>
+</head>
+
+<body>
+    <div id="root"></div>
+    <div id="root2"></div>
+       
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <script type="text/javascript">
+        var e = React.createElement;
+
+        ReactDOM.render(
+            e("h1", null, "Olá Mundo, Olá React! ",
+                e("br"),
+                e("small", { style: { color: 'blue'} }, "by Anderson Firmino")
+            ),
+            document.getElementById("root")
+        );
+    </script>
+
+    <script type="text/babel">
+        ReactDOM.render(
+                <h1>
+                    Olá Mundo! Olá React! Olá Babel!
+                    <br />
+                    <small style={{color: 'blue'}}>by Anderson Firmino</small>
+                </h1>,
+                document.getElementById("root2")
+        );     
+    </script>    
+</body>
+
+</html>
