@@ -14,6 +14,18 @@ body {
   color: #212121;
 }
 
+.error {
+  text-align: center;
+}
+.error__button {
+  background-color: #03a9f4;
+  border: none;
+  border-radius: 2px;
+  padding: 10px 12px;
+  cursor: pointer;
+  color: #fff;
+}
+
 .app-bar {
   position: fixed;
   top: 0;
@@ -24,10 +36,11 @@ body {
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 }
 .app-bar__container {
+  height: 46px;
   display: flex;
   align-items: center;
   margin: 0 auto;
-  padding: 12px 20px;
+  padding: 0 20px;
   max-width: 600px;
 }
 .app-bar__brand {
@@ -48,6 +61,9 @@ body {
 }
 .app-bar__action--rotation {
   animation: rotation 2s infinite linear;
+}
+.app-bar__action--danger {
+  color: #f44336;
 }
 
 .container {
