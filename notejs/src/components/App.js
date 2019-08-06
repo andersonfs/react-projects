@@ -1,18 +1,20 @@
 import React, { Fragment } from "react";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import uuid from "uuid/v1";
 
-import NewNote from "./NewNote";
-import NoteList from "./NoteList";
 import AppBar from "./AppBar";
 import NoteService from "../services/NoteService";
-import Error from "./Error";
+import NavigationDrawer from "./NavigationDrawer";
+import Notes from "./Notes";
+import About from "./About";
 
 class App extends React.Component {
   state = {
     notes: [],
     isLoading: false,
     reloadHasError: false,
-    savedHasError: false
+    savedHasError: false,
+    isMenuOpen: false
   };
 
   componentDidCatch() {
@@ -98,29 +100,44 @@ class App extends React.Component {
     });
   };
 
+  handeOpenMenu = () => {
+    this.setState({ isMenuOpen: true });
+  }
+
+  handleCloseMenu = () => {
+    this.setState({ isMenuOpen: false });
+  }
+
   render() {
-    const { notes, isLoading, reloadHasError, savedHasError } = this.state;
+    const {
+      notes,
+      isLoading,
+      isMenuOpen,
+      reloadHasError,
+      savedHasError
+    } = this.state;
+
     return (
-      <div>
-        <AppBar isLoading={isLoading} savedHasError={savedHasError} onSaveRetry={()=> {
-          this.handleSave(notes);
-        }}/>
-        <div className = "container">
-          {reloadHasError ? (
-            <Error onRetry={this.handleReload} />
-          ) : (
-            <Fragment>
-              <NewNote onAddNote = {this.handleAddNote}/>
-              <NoteList
-                notes={notes}
-                onMove={this.handleMove}
-                onDelete={this.handleDelete}
-                onEdit={this.handleEdit}
-              />
-            </Fragment>
-          )}
+      <Router>
+        <div>
+          <AppBar isLoading={isLoading}
+            savedHasError={savedHasError}
+            onSaveRetry={()=> {
+              this.handleSave(notes);
+            }}
+            onOpenMenu={this.handeOpenMenu}
+            />
+            <div className = "container">
+              <React.Fragment>
+                <Route path="/" exact component={Notes} />
+                <Route path="/about" exact component={About} />
+              </React.Fragment>
+              </div>
+              <NavigationDrawer
+              isOpen={isMenuOpen}
+              onCloseMenu={this.handleCloseMenu}/>
         </div>
-      </div>
+      </Router>
     );
   }
 }
