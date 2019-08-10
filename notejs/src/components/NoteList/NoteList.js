@@ -1,6 +1,8 @@
 import React from "react";
 
-import Note from "./Note";
+import Note from "../Note/Note";
+
+import "./note-list.scss";
 
 const NoteList = ({ notes, onMove, onDelete, onEdit}) => (
   <div className = "note-list">

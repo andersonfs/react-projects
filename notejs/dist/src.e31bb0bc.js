@@ -29866,7 +29866,12 @@ function v1(options, buf, offset) {
 
 module.exports = v1;
 
-},{"./lib/rng":"../node_modules/uuid/lib/rng-browser.js","./lib/bytesToUuid":"../node_modules/uuid/lib/bytesToUuid.js"}],"components/AppBar.js":[function(require,module,exports) {
+},{"./lib/rng":"../node_modules/uuid/lib/rng-browser.js","./lib/bytesToUuid":"../node_modules/uuid/lib/bytesToUuid.js"}],"components/AppBar/app-bar.scss":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
+
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"components/AppBar/AppBar.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29875,6 +29880,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 
 var _react = _interopRequireDefault(require("react"));
+
+require("./app-bar.scss");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -29908,7 +29915,38 @@ var AppBar = function AppBar(_ref) {
 
 var _default = AppBar;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js"}],"../node_modules/classnames/index.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","./app-bar.scss":"components/AppBar/app-bar.scss"}],"components/Error/error.scss":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
+
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"components/Error/Error.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+require("./error.scss");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Error = function Error(_ref) {
+  var onRetry = _ref.onRetry;
+  return _react.default.createElement("div", {
+    className: "error"
+  }, _react.default.createElement("h1", null, "Ops!"), _react.default.createElement("p", null, "Ocorreu um erro inesperado ao carregar a lista de notas."), _react.default.createElement("button", {
+    className: "error__button",
+    onClick: onRetry
+  }, "Tentar novamente"));
+};
+
+var _default = Error;
+exports.default = _default;
+},{"react":"../node_modules/react/index.js","./error.scss":"components/Error/error.scss"}],"../node_modules/classnames/index.js":[function(require,module,exports) {
 var define;
 /*!
   Copyright (c) 2017 Jed Watson.
@@ -29963,7 +30001,12 @@ var define;
 	}
 }());
 
-},{}],"components/NavigationDrawer.js":[function(require,module,exports) {
+},{}],"components/NavigationDrawer/navigation-drawer.scss":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
+
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"components/NavigationDrawer/NavigationDrawer.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29976,6 +30019,8 @@ var _react = _interopRequireDefault(require("react"));
 var _classnames = _interopRequireDefault(require("classnames"));
 
 var _reactRouterDom = require("react-router-dom");
+
+require("./navigation-drawer.scss");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -30018,68 +30063,12 @@ var NavigationDrawer = function NavigationDrawer(_ref) {
 var _default = (0, _reactRouterDom.withRouter)(NavigationDrawer);
 
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","classnames":"../node_modules/classnames/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"services/NoteService.js":[function(require,module,exports) {
-"use strict";
+},{"react":"../node_modules/react/index.js","classnames":"../node_modules/classnames/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","./navigation-drawer.scss":"components/NavigationDrawer/navigation-drawer.scss"}],"components/NewNote/new-note.scss":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var failedLoadAttemps = 2;
-var failedSaveAttemps = 2;
-
-var NoteService =
-/*#__PURE__*/
-function () {
-  function NoteService() {
-    _classCallCheck(this, NoteService);
-  }
-
-  _createClass(NoteService, null, [{
-    key: "load",
-    value: function load() {
-      return new Promise(function (resolve, reject) {
-        setTimeout(function () {
-          if (failedLoadAttemps > 1) {
-            var notes = window.localStorage.getItem("notes");
-            resolve(notes ? JSON.parse(notes) : []);
-          } else {
-            reject();
-            failedLoadAttemps++;
-          }
-        }, 2000);
-      });
-    }
-  }, {
-    key: "save",
-    value: function save(notes) {
-      return new Promise(function (resolve, reject) {
-        setTimeout(function () {
-          if (failedSaveAttemps > 1) {
-            window.localStorage.setItem("notes", JSON.stringify(notes));
-            resolve();
-          } else {
-            reject();
-            failedSaveAttemps++;
-          }
-        }, 2000);
-      });
-    }
-  }]);
-
-  return NoteService;
-}();
-
-var _default = NoteService;
-exports.default = _default;
-},{}],"components/NewNote.js":[function(require,module,exports) {
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"components/NewNote/NewNote.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30088,6 +30077,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 
 var _react = _interopRequireDefault(require("react"));
+
+require("./new-note.scss");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -30169,7 +30160,12 @@ function (_React$Component) {
 
 var _default = NewNote;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js"}],"components/Note.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","./new-note.scss":"components/NewNote/new-note.scss"}],"components/Note/note.scss":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
+
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"components/Note/Note.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30180,6 +30176,8 @@ exports.default = void 0;
 var _react = _interopRequireDefault(require("react"));
 
 var _classnames = _interopRequireDefault(require("classnames"));
+
+require("./note.scss");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -30319,7 +30317,12 @@ function (_React$Component) {
 
 var _default = Note;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","classnames":"../node_modules/classnames/index.js"}],"components/NoteList.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","classnames":"../node_modules/classnames/index.js","./note.scss":"components/Note/note.scss"}],"components/NoteList/note-list.scss":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
+
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"components/NoteList/NoteList.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30329,7 +30332,9 @@ exports.default = void 0;
 
 var _react = _interopRequireDefault(require("react"));
 
-var _Note = _interopRequireDefault(require("./Note"));
+var _Note = _interopRequireDefault(require("../Note/Note"));
+
+require("./note-list.scss");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -30355,7 +30360,68 @@ var NoteList = function NoteList(_ref) {
 
 var _default = NoteList;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","./Note":"components/Note.js"}],"components/Error.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","../Note/Note":"components/Note/Note.js","./note-list.scss":"components/NoteList/note-list.scss"}],"components/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+Object.defineProperty(exports, "AppBar", {
+  enumerable: true,
+  get: function () {
+    return _AppBar.default;
+  }
+});
+Object.defineProperty(exports, "Error", {
+  enumerable: true,
+  get: function () {
+    return _Error.default;
+  }
+});
+Object.defineProperty(exports, "NavigationDrawer", {
+  enumerable: true,
+  get: function () {
+    return _NavigationDrawer.default;
+  }
+});
+Object.defineProperty(exports, "NewNote", {
+  enumerable: true,
+  get: function () {
+    return _NewNote.default;
+  }
+});
+Object.defineProperty(exports, "Note", {
+  enumerable: true,
+  get: function () {
+    return _Note.default;
+  }
+});
+Object.defineProperty(exports, "NoteList", {
+  enumerable: true,
+  get: function () {
+    return _NoteList.default;
+  }
+});
+
+var _AppBar = _interopRequireDefault(require("./AppBar/AppBar"));
+
+var _Error = _interopRequireDefault(require("./Error/Error"));
+
+var _NavigationDrawer = _interopRequireDefault(require("./NavigationDrawer/NavigationDrawer"));
+
+var _NewNote = _interopRequireDefault(require("./NewNote/NewNote"));
+
+var _Note = _interopRequireDefault(require("./Note/Note"));
+
+var _NoteList = _interopRequireDefault(require("./NoteList/NoteList"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+},{"./AppBar/AppBar":"components/AppBar/AppBar.js","./Error/Error":"components/Error/Error.js","./NavigationDrawer/NavigationDrawer":"components/NavigationDrawer/NavigationDrawer.js","./NewNote/NewNote":"components/NewNote/NewNote.js","./Note/Note":"components/Note/Note.js","./NoteList/NoteList":"components/NoteList/NoteList.js"}],"containers/About/about.scss":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
+
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"containers/About/About.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30365,21 +30431,19 @@ exports.default = void 0;
 
 var _react = _interopRequireDefault(require("react"));
 
+require("./about.scss");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var Error = function Error(_ref) {
-  var onRetry = _ref.onRetry;
+var About = function About() {
   return _react.default.createElement("div", {
-    className: "error"
-  }, _react.default.createElement("h1", null, "Ops!"), _react.default.createElement("p", null, "Ocorreu um erro inesperado ao carregar a lista de notas."), _react.default.createElement("button", {
-    className: "error__button",
-    onClick: onRetry
-  }, "Tentar novamente"));
+    className: "about"
+  }, _react.default.createElement("h1", null, "Note.js"));
 };
 
-var _default = Error;
+var _default = About;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js"}],"containers/Notes.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","./about.scss":"containers/About/about.scss"}],"containers/Notes/Notes.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30389,13 +30453,7 @@ exports.default = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
-var _NewNote = _interopRequireDefault(require("../components/NewNote"));
-
-var _NoteList = _interopRequireDefault(require("../components/NoteList"));
-
-var _Error = _interopRequireDefault(require("../components/Error"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var _components = require("../../components");
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 
@@ -30409,14 +30467,14 @@ var Notes = function Notes(_ref) {
       onEdit = _ref.onEdit;
 
   if (reloadHasError) {
-    return _react.default.createElement(_Error.default, {
+    return _react.default.createElement(_components.Error, {
       onRetry: onRetry
     });
   }
 
-  return _react.default.createElement(_react.Fragment, null, _react.default.createElement(_NewNote.default, {
+  return _react.default.createElement(_react.Fragment, null, _react.default.createElement(_components.NewNote, {
     onAddNote: onAddNote
-  }), _react.default.createElement(_NoteList.default, {
+  }), _react.default.createElement(_components.NoteList, {
     notes: notes,
     onMove: onMove,
     onDelete: onDelete,
@@ -30426,7 +30484,73 @@ var Notes = function Notes(_ref) {
 
 var _default = Notes;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","../components/NewNote":"components/NewNote.js","../components/NoteList":"components/NoteList.js","../components/Error":"components/Error.js"}],"containers/About.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","../../components":"components/index.js"}],"services/NoteService.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var failedLoadAttemps = 2;
+var failedSaveAttemps = 2;
+
+var NoteService =
+/*#__PURE__*/
+function () {
+  function NoteService() {
+    _classCallCheck(this, NoteService);
+  }
+
+  _createClass(NoteService, null, [{
+    key: "load",
+    value: function load() {
+      return new Promise(function (resolve, reject) {
+        setTimeout(function () {
+          if (failedLoadAttemps > 1) {
+            var notes = window.localStorage.getItem("notes");
+            resolve(notes ? JSON.parse(notes) : []);
+          } else {
+            reject();
+            failedLoadAttemps++;
+          }
+        }, 2000);
+      });
+    }
+  }, {
+    key: "save",
+    value: function save(notes) {
+      return new Promise(function (resolve, reject) {
+        setTimeout(function () {
+          if (failedSaveAttemps > 1) {
+            window.localStorage.setItem("notes", JSON.stringify(notes));
+            resolve();
+          } else {
+            reject();
+            failedSaveAttemps++;
+          }
+        }, 2000);
+      });
+    }
+  }]);
+
+  return NoteService;
+}();
+
+var _default = NoteService;
+exports.default = _default;
+},{}],"containers/App/app.scss":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
+
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"containers/App/App.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30436,43 +30560,21 @@ exports.default = void 0;
 
 var _react = _interopRequireDefault(require("react"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var About = function About() {
-  return _react.default.createElement("div", {
-    className: "about"
-  }, _react.default.createElement("h1", null, "Note.js"));
-};
-
-var _default = About;
-exports.default = _default;
-},{"react":"../node_modules/react/index.js"}],"containers/App.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _react = _interopRequireWildcard(require("react"));
-
 var _reactRouterDom = require("react-router-dom");
 
 var _v = _interopRequireDefault(require("uuid/v1"));
 
-var _AppBar = _interopRequireDefault(require("../components/AppBar"));
+var _components = require("../../components");
 
-var _NavigationDrawer = _interopRequireDefault(require("../components/NavigationDrawer"));
+var _About = _interopRequireDefault(require("../About/About"));
 
-var _NoteService = _interopRequireDefault(require("../services/NoteService"));
+var _Notes = _interopRequireDefault(require("../Notes/Notes"));
 
-var _Notes = _interopRequireDefault(require("./Notes"));
+var _NoteService = _interopRequireDefault(require("../../services/NoteService"));
 
-var _About = _interopRequireDefault(require("./About"));
+require("./app.scss");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -30641,7 +30743,7 @@ function (_React$Component) {
           isMenuOpen = _this$state.isMenuOpen,
           reloadHasError = _this$state.reloadHasError,
           savedHasError = _this$state.savedHasError;
-      return _react.default.createElement(_reactRouterDom.BrowserRouter, null, _react.default.createElement("div", null, _react.default.createElement(_AppBar.default, {
+      return _react.default.createElement(_reactRouterDom.BrowserRouter, null, _react.default.createElement("div", null, _react.default.createElement(_components.AppBar, {
         isLoading: isLoading,
         savedHasError: savedHasError,
         onSaveRetry: function onSaveRetry() {
@@ -30668,7 +30770,7 @@ function (_React$Component) {
         path: "/about",
         exact: true,
         component: _About.default
-      }))), _react.default.createElement(_NavigationDrawer.default, {
+      }))), _react.default.createElement(_components.NavigationDrawer, {
         isOpen: isMenuOpen,
         onCloseMenu: this.handleCloseMenu
       })));
@@ -30680,7 +30782,7 @@ function (_React$Component) {
 
 var _default = App;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","uuid/v1":"../node_modules/uuid/v1.js","../components/AppBar":"components/AppBar.js","../components/NavigationDrawer":"components/NavigationDrawer.js","../services/NoteService":"services/NoteService.js","./Notes":"containers/Notes.js","./About":"containers/About.js"}],"index.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","uuid/v1":"../node_modules/uuid/v1.js","../../components":"components/index.js","../About/About":"containers/About/About.js","../Notes/Notes":"containers/Notes/Notes.js","../../services/NoteService":"services/NoteService.js","./app.scss":"containers/App/app.scss"}],"index.js":[function(require,module,exports) {
 "use strict";
 
 var _react = _interopRequireDefault(require("react"));
@@ -30689,12 +30791,12 @@ var _reactDom = _interopRequireDefault(require("react-dom"));
 
 require("./index.scss");
 
-var _App = _interopRequireDefault(require("./containers/App"));
+var _App = _interopRequireDefault(require("./containers/App/App"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _reactDom.default.render(_react.default.createElement(_App.default, null), document.getElementById("root"));
-},{"react":"../node_modules/react/index.js","react-dom":"../node_modules/react-dom/index.js","./index.scss":"index.scss","./containers/App":"containers/App.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-dom":"../node_modules/react-dom/index.js","./index.scss":"index.scss","./containers/App/App":"containers/App/App.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -30722,7 +30824,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36635" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36367" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

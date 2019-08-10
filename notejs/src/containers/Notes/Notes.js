@@ -1,14 +1,12 @@
 import React, { Fragment } from "react";
 
-import NewNote from "../components/NewNote";
-import NoteList from "../components/NoteList";
-import Error from "../components/Error";
+import { Error, NewNote, NoteList } from "../../components";
 
 const Notes = ({
   notes,
   reloadHasError,
   onRetry,
-  onAddNote,  
+  onAddNote,
   onDelete,
   onMove,
   onEdit

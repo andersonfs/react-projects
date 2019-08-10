@@ -1,13 +1,14 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import uuid from "uuid/v1";
 
-import AppBar from "../components/AppBar";
-import NavigationDrawer from "../components/NavigationDrawer";
-import NoteService from "../services/NoteService";
+import { AppBar, NavigationDrawer } from "../../components";
 
-import Notes from "./Notes";
-import About from "./About";
+import About from "../About/About";
+import Notes from "../Notes/Notes";
+import NoteService from "../../services/NoteService";
+
+import "./app.scss";
 
 class App extends React.Component {
   state = {
