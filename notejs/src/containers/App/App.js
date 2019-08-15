@@ -2,13 +2,11 @@ import React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import uuid from "uuid/v1";
 
-import { AppBar, NavigationDrawer } from "../../components";
+import { PageLayout } from "../../components";
 
 import About from "../About/About";
 import Notes from "../Notes/Notes";
 import NoteService from "../../services/NoteService";
-
-import "./app.scss";
 
 class App extends React.Component {
   state = {
@@ -101,7 +99,6 @@ class App extends React.Component {
       this.setState({ isLoading: false, savedHasError: true });
     });
   };
-
   handeOpenMenu = () => {
     this.setState({ isMenuOpen: true });
   }
@@ -121,38 +118,35 @@ class App extends React.Component {
 
     return (
       <Router>
-        <div>
-          <AppBar isLoading={isLoading}
-            savedHasError={savedHasError}
-            onSaveRetry={()=> {
-              this.handleSave(notes);
-            }}
-            onOpenMenu={this.handeOpenMenu}
-            />
-            <div className = "container">
-              <React.Fragment>
-                <Route
-                  path="/"
-                  exact
-                  render={props => (
-                    <Notes
-                      notes={notes}
-                      reloadHasError={reloadHasError}
-                      onRetry={this.handleReload}
-                      onAddNote={this.handleAddNote}
-                      onMove={this.handleMove}
-                      onDelete={this.handleDelete}
-                      onEdit={this.handleEdit}
-                    />
-                  )}
-                />
-                <Route path="/about" exact component={About} />
-              </React.Fragment>
-              </div>
-              <NavigationDrawer
-              isOpen={isMenuOpen}
-              onCloseMenu={this.handleCloseMenu}/>
-        </div>
+        <PageLayout
+          isLoading={isLoading}
+          savedHasError={savedHasError}
+          onSaveRetry={() => {
+            this.handleSave(notes);
+          }}
+          onOpenMenu={this.handleOpenMenu}
+          isMenuOpen={isMenuOpen}
+          onCloseMenu={this.handleCloseMenu}
+        >
+            <React.Fragment>
+              <Route
+                path="/"
+                exact
+                render={props => (
+                  <Notes
+                    notes={notes}
+                    reloadHasError={reloadHasError}
+                    onRetry={this.handleReload}
+                    onAddNote={this.handleAddNote}
+                    onMove={this.handleMove}
+                    onDelete={this.handleDelete}
+                    onEdit={this.handleEdit}
+                  />
+                )}
+              />
+              <Route path="/about" exact component={About} />
+            </React.Fragment>
+          </PageLayout>
       </Router>
     );
   }
