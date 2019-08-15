@@ -30406,7 +30406,40 @@ var PageLayout = function PageLayout(_ref) {
 
 var _default = PageLayout;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","../AppBar/AppBar":"components/AppBar/AppBar.js","../NavigationDrawer/NavigationDrawer":"components/NavigationDrawer/NavigationDrawer.js","./page-layout.scss":"components/PageLayout/page-layout.scss"}],"components/index.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","../AppBar/AppBar":"components/AppBar/AppBar.js","../NavigationDrawer/NavigationDrawer":"components/NavigationDrawer/NavigationDrawer.js","./page-layout.scss":"components/PageLayout/page-layout.scss"}],"components/Header/header.scss":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
+
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"components/Header/Header.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+var _classnames = _interopRequireDefault(require("classnames"));
+
+require("./header.scss");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Header = function Header(_ref) {
+  var children = _ref.children,
+      centered = _ref.centered;
+  return _react.default.createElement("h1", {
+    className: (0, _classnames.default)("header", {
+      "header--centered": centered
+    })
+  }, children);
+};
+
+var _default = Header;
+exports.default = _default;
+},{"react":"../node_modules/react/index.js","classnames":"../node_modules/classnames/index.js","./header.scss":"components/Header/header.scss"}],"components/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30442,6 +30475,12 @@ Object.defineProperty(exports, "PageLayout", {
     return _PageLayout.default;
   }
 });
+Object.defineProperty(exports, "Header", {
+  enumerable: true,
+  get: function () {
+    return _Header.default;
+  }
+});
 
 var _Error = _interopRequireDefault(require("./Error/Error"));
 
@@ -30453,13 +30492,10 @@ var _NoteList = _interopRequireDefault(require("./NoteList/NoteList"));
 
 var _PageLayout = _interopRequireDefault(require("./PageLayout/PageLayout"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"./Error/Error":"components/Error/Error.js","./NewNote/NewNote":"components/NewNote/NewNote.js","./Note/Note":"components/Note/Note.js","./NoteList/NoteList":"components/NoteList/NoteList.js","./PageLayout/PageLayout":"components/PageLayout/PageLayout.js"}],"containers/About/about.scss":[function(require,module,exports) {
-var reloadCSS = require('_css_loader');
+var _Header = _interopRequireDefault(require("./Header/Header"));
 
-module.hot.dispose(reloadCSS);
-module.hot.accept(reloadCSS);
-},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"containers/About/About.js":[function(require,module,exports) {
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+},{"./Error/Error":"components/Error/Error.js","./NewNote/NewNote":"components/NewNote/NewNote.js","./Note/Note":"components/Note/Note.js","./NoteList/NoteList":"components/NoteList/NoteList.js","./PageLayout/PageLayout":"components/PageLayout/PageLayout.js","./Header/Header":"components/Header/Header.js"}],"containers/About/About.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30469,19 +30505,19 @@ exports.default = void 0;
 
 var _react = _interopRequireDefault(require("react"));
 
-require("./about.scss");
+var _components = require("../../components");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var About = function About() {
-  return _react.default.createElement("div", {
-    className: "about"
-  }, _react.default.createElement("h1", null, "Note.js"));
+  return _react.default.createElement("div", null, _react.default.createElement(_components.Header, {
+    centered: true
+  }, "Note.js"));
 };
 
 var _default = About;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","./about.scss":"containers/About/about.scss"}],"containers/Notes/Notes.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","../../components":"components/index.js"}],"containers/Notes/Notes.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30740,7 +30776,7 @@ function (_React$Component) {
           savedHasError: true
         });
       });
-    }, _this.handeOpenMenu = function () {
+    }, _this.handleOpenMenu = function () {
       _this.setState({
         isMenuOpen: true
       });
@@ -30852,7 +30888,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "38813" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "41537" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

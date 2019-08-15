@@ -99,7 +99,7 @@ class App extends React.Component {
       this.setState({ isLoading: false, savedHasError: true });
     });
   };
-  handeOpenMenu = () => {
+  handleOpenMenu = () => {
     this.setState({ isMenuOpen: true });
   }
 
@@ -128,25 +128,25 @@ class App extends React.Component {
           isMenuOpen={isMenuOpen}
           onCloseMenu={this.handleCloseMenu}
         >
-            <React.Fragment>
-              <Route
-                path="/"
-                exact
-                render={props => (
-                  <Notes
-                    notes={notes}
-                    reloadHasError={reloadHasError}
-                    onRetry={this.handleReload}
-                    onAddNote={this.handleAddNote}
-                    onMove={this.handleMove}
-                    onDelete={this.handleDelete}
-                    onEdit={this.handleEdit}
-                  />
-                )}
-              />
-              <Route path="/about" exact component={About} />
-            </React.Fragment>
-          </PageLayout>
+          <React.Fragment>
+            <Route
+              path="/"
+              exact
+              render={props => (
+                <Notes
+                  notes={notes}
+                  reloadHasError={reloadHasError}
+                  onRetry={this.handleReload}
+                  onAddNote={this.handleAddNote}
+                  onMove={this.handleMove}
+                  onDelete={this.handleDelete}
+                  onEdit={this.handleEdit}
+                />
+              )}
+            />
+            <Route path="/about" exact component={About} />
+          </React.Fragment>
+        </PageLayout>
       </Router>
     );
   }
