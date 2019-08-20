@@ -191,6 +191,9 @@ body {
 .navigation-drawer__menu__item:hover {
   background-color: rgba(0, 0, 0, 0.08);
 }
+.navigation-drawer__menu__item--active {
+  color: #03a9f4;
+}
 .container {
   margin: 0 auto;
   padding: 70px 20px;

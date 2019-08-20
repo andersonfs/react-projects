@@ -30387,7 +30387,38 @@ var AppBar = function AppBar(_ref) {
 
 var _default = AppBar;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","./app-bar.scss":"components/AppBar/app-bar.scss"}],"components/NavigationDrawer/navigation-drawer.scss":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","./app-bar.scss":"components/AppBar/app-bar.scss"}],"components/NavigationDrawer/MenuItem.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+var _classnames = _interopRequireDefault(require("classnames"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var MenuItem = function MenuItem(_ref) {
+  var isActive = _ref.isActive,
+      icon = _ref.icon,
+      label = _ref.label,
+      onClick = _ref.onClick;
+  return _react.default.createElement("button", {
+    className: (0, _classnames.default)("navigation-drawer__menu__item", {
+      "navigation-drawer__menu__item--active": isActive
+    }),
+    onClick: onClick
+  }, _react.default.createElement("i", {
+    className: "material-icons"
+  }, icon), " ", label);
+};
+
+var _default = MenuItem;
+exports.default = _default;
+},{"react":"../node_modules/react/index.js","classnames":"../node_modules/classnames/index.js"}],"components/NavigationDrawer/navigation-drawer.scss":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
@@ -30406,14 +30437,18 @@ var _classnames = _interopRequireDefault(require("classnames"));
 
 var _reactRouterDom = require("react-router-dom");
 
+var _MenuItem = _interopRequireDefault(require("./MenuItem"));
+
 require("./navigation-drawer.scss");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var NavigationDrawer = function NavigationDrawer(_ref) {
-  var isOpen = _ref.isOpen,
+  var menu = _ref.menu,
+      isOpen = _ref.isOpen,
       onCloseMenu = _ref.onCloseMenu,
-      history = _ref.history;
+      history = _ref.history,
+      location = _ref.location;
   return _react.default.createElement("div", {
     className: (0, _classnames.default)("navigation-drawer", {
       "navigation-drawer--open": isOpen
@@ -30427,37 +30462,24 @@ var NavigationDrawer = function NavigationDrawer(_ref) {
     className: "material-icons"
   }, "close"))), _react.default.createElement("div", {
     className: "navigation-drawer__menu"
-  }, _react.default.createElement("button", {
-    className: "navigation-drawer__menu__item",
-    onClick: function onClick() {
-      onCloseMenu();
-      history.push("/");
-    }
-  }, _react.default.createElement("i", {
-    className: "material-icons"
-  }, "note"), " Notas"), _react.default.createElement("button", {
-    className: "navigation-drawer__menu__item",
-    onClick: function onClick() {
-      onCloseMenu();
-      history.push("/settings");
-    }
-  }, _react.default.createElement("i", {
-    className: "material-icons"
-  }, "settings"), " Configura\xE7\xF5es"), _react.default.createElement("button", {
-    className: "navigation-drawer__menu__item",
-    onClick: function onClick() {
-      onCloseMenu();
-      history.push("/about");
-    }
-  }, _react.default.createElement("i", {
-    className: "material-icons"
-  }, "info"), " Sobre")));
+  }, menu.map(function (item) {
+    return _react.default.createElement(_MenuItem.default, {
+      key: item.icon,
+      isActive: location.pathname === item.path,
+      onClick: function onClick() {
+        onCloseMenu();
+        history.push(item.path);
+      },
+      icon: item.icon,
+      label: item.label
+    });
+  })));
 };
 
 var _default = (0, _reactRouterDom.withRouter)(NavigationDrawer);
 
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","classnames":"../node_modules/classnames/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","./navigation-drawer.scss":"components/NavigationDrawer/navigation-drawer.scss"}],"components/PageLayout/page-layout.scss":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","classnames":"../node_modules/classnames/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","./MenuItem":"components/NavigationDrawer/MenuItem.js","./navigation-drawer.scss":"components/NavigationDrawer/navigation-drawer.scss"}],"components/PageLayout/page-layout.scss":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
@@ -30487,7 +30509,8 @@ var PageLayout = function PageLayout(_ref) {
       onSaveRetry = _ref.onSaveRetry,
       onOpenMenu = _ref.onOpenMenu,
       isMenuOpen = _ref.isMenuOpen,
-      onCloseMenu = _ref.onCloseMenu;
+      onCloseMenu = _ref.onCloseMenu,
+      menu = _ref.menu;
   return _react.default.createElement("div", null, _react.default.createElement(_AppBar.default, {
     isLoading: isLoading,
     savedHasError: savedHasError,
@@ -30496,6 +30519,7 @@ var PageLayout = function PageLayout(_ref) {
   }), _react.default.createElement("div", {
     className: "container"
   }, children), _react.default.createElement(_NavigationDrawer.default, {
+    menu: menu,
     isOpen: isMenuOpen,
     onCloseMenu: onCloseMenu
   }));
@@ -30734,7 +30758,9 @@ var Notes = function Notes(_ref) {
 
 var _default = Notes;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","../../components":"components/index.js"}],"containers/PageNotFound/PageNotFound.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","../../components":"components/index.js"}],"images/travolta.gif":[function(require,module,exports) {
+module.exports = "/travolta.a8191ff1.gif";
+},{}],"containers/PageNotFound/PageNotFound.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30744,25 +30770,31 @@ exports.default = void 0;
 
 var _react = _interopRequireDefault(require("react"));
 
+var _travolta = _interopRequireDefault(require("../../images/travolta.gif"));
+
 var _components = require("../../components");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var PageNotFound = function PageNotFound() {
-  return _react.default.createElement(_components.Center, null, _react.default.createElement(_components.Header, null, "Ops!"), _react.default.createElement(_components.ButtonLink, {
+  return _react.default.createElement(_components.Center, null, _react.default.createElement(_components.Header, null, "Ops!"), _react.default.createElement("div", null, _react.default.createElement("img", {
+    src: _travolta.default,
+    alt: "John Travolta",
+    width: "200"
+  })), _react.default.createElement(_components.ButtonLink, {
     to: "/"
   }, "Voltar para o in\xEDcio"));
 };
 
 var _default = PageNotFound;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","../../components":"components/index.js"}],"containers/Routes.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","../../images/travolta.gif":"images/travolta.gif","../../components":"components/index.js"}],"containers/Routes.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.default = exports.menu = void 0;
 
 var _react = _interopRequireDefault(require("react"));
 
@@ -30777,6 +30809,21 @@ var _PageNotFound = _interopRequireDefault(require("./PageNotFound/PageNotFound"
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var menu = [{
+  icon: "note",
+  label: "Notas",
+  path: "/"
+}, {
+  icon: "settings",
+  label: "Configurações",
+  path: "/settings"
+}, {
+  icon: "info",
+  label: "Sobre",
+  path: "/about"
+}];
+exports.menu = menu;
 
 var Routes = function Routes(_ref) {
   var notes = _ref.notes,
@@ -30829,7 +30876,9 @@ var _components = require("../../components");
 
 var _NoteService = _interopRequireDefault(require("../../services/NoteService"));
 
-var _Routes = _interopRequireDefault(require("../Routes"));
+var _Routes = _interopRequireWildcard(require("../Routes"));
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -31008,7 +31057,8 @@ function (_React$Component) {
         },
         onOpenMenu: this.handleOpenMenu,
         isMenuOpen: isMenuOpen,
-        onCloseMenu: this.handleCloseMenu
+        onCloseMenu: this.handleCloseMenu,
+        menu: _Routes.menu
       }, _react.default.createElement(_Routes.default, {
         notes: notes,
         reloadHasError: reloadHasError,
@@ -31068,7 +31118,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "38769" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "37285" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
