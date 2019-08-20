@@ -5,16 +5,24 @@ body {
   font-family: "Roboto", sans-serif;
   color: #212121;
 }
-.error {
-  text-align: center;
-}
-.error__button {
+.button {
   background-color: #03a9f4;
   border: none;
   border-radius: 2px;
   padding: 10px 12px;
   cursor: pointer;
   color: #fff;
+  text-decoration: none;
+}
+.header {
+  font-size: 40px;
+  font-weight: 300;
+}
+.header--centered {
+  text-align: center;
+}
+.center {
+  text-align: center;
 }
 @-webkit-keyframes rotation {
   from {
@@ -187,13 +195,6 @@ body {
   margin: 0 auto;
   padding: 70px 20px;
   max-width: 600px;
-}
-.header {
-  font-size: 40px;
-  font-weight: 300;
-}
-.header--centered {
-  text-align: center;
 }
 
 /*# sourceMappingURL=/src.e31bb0bc.css.map */
