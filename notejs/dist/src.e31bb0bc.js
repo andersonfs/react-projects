@@ -30546,10 +30546,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var ButtonLink = function ButtonLink(_ref) {
   var children = _ref.children,
       to = _ref.to;
-  return _react.default.createElement(_reactRouterDom.Link, {
+  return _react.default.createElement("div", null, _react.default.createElement(_reactRouterDom.Link, {
     className: "button",
     to: to
-  }, children);
+  }, children));
 };
 
 var _default = ButtonLink;
@@ -30695,7 +30695,7 @@ function () {
 
 var _default = NoteService;
 exports.default = _default;
-},{}],"containers/About/About.js":[function(require,module,exports) {
+},{}],"containers/About/AboutPage.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30709,15 +30709,15 @@ var _components = require("../../components");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var About = function About() {
+var AboutPage = function AboutPage() {
   return _react.default.createElement("div", null, _react.default.createElement(_components.Header, {
     centered: true
   }, "Note.js"));
 };
 
-var _default = About;
+var _default = AboutPage;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","../../components":"components/index.js"}],"containers/Notes/Notes.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","../../components":"components/index.js"}],"containers/Notes/NotesPage.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30731,7 +30731,7 @@ var _components = require("../../components");
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 
-var Notes = function Notes(_ref) {
+var NotesPage = function NotesPage(_ref) {
   var notes = _ref.notes,
       reloadHasError = _ref.reloadHasError,
       onRetry = _ref.onRetry,
@@ -30756,7 +30756,7 @@ var Notes = function Notes(_ref) {
   }));
 };
 
-var _default = Notes;
+var _default = NotesPage;
 exports.default = _default;
 },{"react":"../node_modules/react/index.js","../../components":"components/index.js"}],"images/travolta.gif":[function(require,module,exports) {
 module.exports = "/travolta.a8191ff1.gif";
@@ -30788,7 +30788,33 @@ var PageNotFound = function PageNotFound() {
 
 var _default = PageNotFound;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","../../images/travolta.gif":"images/travolta.gif","../../components":"components/index.js"}],"containers/Routes.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","../../images/travolta.gif":"images/travolta.gif","../../components":"components/index.js"}],"containers/Settings/SettingsPage.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+var _components = require("../../components");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var SettingsPage = function SettingsPage() {
+  return _react.default.createElement("div", null, _react.default.createElement(_components.Header, null, "Temas"), _react.default.createElement("div", {
+    className: "themes"
+  }, _react.default.createElement("div", {
+    className: "themes__item"
+  }, _react.default.createElement("p", null, "Padr\xE3o")), _react.default.createElement("div", {
+    className: "themes__item"
+  }, _react.default.createElement("p", null, "Cl\xE1ssico"))));
+};
+
+var _default = SettingsPage;
+exports.default = _default;
+},{"react":"../node_modules/react/index.js","../../components":"components/index.js"}],"containers/Routes.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30800,11 +30826,13 @@ var _react = _interopRequireDefault(require("react"));
 
 var _reactRouterDom = require("react-router-dom");
 
-var _About = _interopRequireDefault(require("./About/About"));
+var _AboutPage = _interopRequireDefault(require("./About/AboutPage"));
 
-var _Notes = _interopRequireDefault(require("./Notes/Notes"));
+var _NotesPage = _interopRequireDefault(require("./Notes/NotesPage"));
 
 var _PageNotFound = _interopRequireDefault(require("./PageNotFound/PageNotFound"));
+
+var _SettingsPage = _interopRequireDefault(require("./Settings/SettingsPage"));
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -30837,7 +30865,7 @@ var Routes = function Routes(_ref) {
     path: "/",
     exact: true,
     render: function render(props) {
-      return _react.default.createElement(_Notes.default, _extends({
+      return _react.default.createElement(_NotesPage.default, _extends({
         notes: notes,
         reloadHasError: reloadHasError,
         onRetry: onRetry,
@@ -30848,9 +30876,13 @@ var Routes = function Routes(_ref) {
       }, props));
     }
   }), _react.default.createElement(_reactRouterDom.Route, {
+    path: "/settings",
+    exact: true,
+    component: _SettingsPage.default
+  }), _react.default.createElement(_reactRouterDom.Route, {
     path: "/about",
     exact: true,
-    component: _About.default
+    component: _AboutPage.default
   }), _react.default.createElement(_reactRouterDom.Route, {
     component: _PageNotFound.default
   }));
@@ -30858,7 +30890,7 @@ var Routes = function Routes(_ref) {
 
 var _default = Routes;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","./About/About":"containers/About/About.js","./Notes/Notes":"containers/Notes/Notes.js","./PageNotFound/PageNotFound":"containers/PageNotFound/PageNotFound.js"}],"containers/App/App.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","./About/AboutPage":"containers/About/AboutPage.js","./Notes/NotesPage":"containers/Notes/NotesPage.js","./PageNotFound/PageNotFound":"containers/PageNotFound/PageNotFound.js","./Settings/SettingsPage":"containers/Settings/SettingsPage.js"}],"containers/App/App.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -31118,7 +31150,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "37285" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "32781" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

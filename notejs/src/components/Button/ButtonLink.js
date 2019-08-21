@@ -4,9 +4,11 @@ import { Link } from "react-router-dom";
 import "./button.scss";
 
 const ButtonLink = ({ children, to }) => (
-  <Link className="button" to={to}>
-    {children}
-  </Link>
+  <div>
+    <Link className="button" to={to}>
+      {children}
+    </Link>
+  </div>
 );
 
 export default ButtonLink;
