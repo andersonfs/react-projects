@@ -30338,7 +30338,23 @@ var NoteList = function NoteList(_ref) {
 
 var _default = NoteList;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","../Note/Note":"components/Note/Note.js","./note-list.scss":"components/NoteList/note-list.scss"}],"components/AppBar/app-bar.scss":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","../Note/Note":"components/Note/Note.js","./note-list.scss":"components/NoteList/note-list.scss"}],"containers/Settings/SettingsContext.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var SettingsContext = _react.default.createContext();
+
+var _default = SettingsContext;
+exports.default = _default;
+},{"react":"../node_modules/react/index.js"}],"components/AppBar/app-bar.scss":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
@@ -30353,6 +30369,8 @@ exports.default = void 0;
 
 var _react = _interopRequireDefault(require("react"));
 
+var _SettingsContext = _interopRequireDefault(require("../../containers/Settings/SettingsContext"));
+
 require("./app-bar.scss");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -30362,32 +30380,38 @@ var AppBar = function AppBar(_ref) {
       savedHasError = _ref.savedHasError,
       onSaveRetry = _ref.onSaveRetry,
       onOpenMenu = _ref.onOpenMenu;
-  return _react.default.createElement("div", {
-    className: "app-bar"
-  }, _react.default.createElement("div", {
-    className: "app-bar__container"
-  }, _react.default.createElement("button", {
-    className: "app-bar__action",
-    onClick: onOpenMenu
-  }, _react.default.createElement("i", {
-    className: "material-icons"
-  }, "menu")), _react.default.createElement("span", {
-    className: "app-bar__brand"
-  }, "Note.js"), isLoading && _react.default.createElement("button", {
-    className: "app-bar__action app-bar__action--rotation"
-  }, _react.default.createElement("i", {
-    className: "material-icons"
-  }, "refresh")), savedHasError && _react.default.createElement("button", {
-    className: "app-bar__action app-bar__action--danger",
-    onClick: onSaveRetry
-  }, _react.default.createElement("i", {
-    className: "material-icons"
-  }, "cloud_off"))));
+  return _react.default.createElement(_SettingsContext.default.Consumer, null, function (_ref2) {
+    var theme = _ref2.theme;
+    return _react.default.createElement("div", {
+      className: "app-bar",
+      style: {
+        backgroundColor: theme.colorPrimary
+      }
+    }, _react.default.createElement("div", {
+      className: "app-bar__container"
+    }, _react.default.createElement("button", {
+      className: "app-bar__action",
+      onClick: onOpenMenu
+    }, _react.default.createElement("i", {
+      className: "material-icons"
+    }, "menu")), _react.default.createElement("span", {
+      className: "app-bar__brand"
+    }, "Note.js"), isLoading && _react.default.createElement("button", {
+      className: "app-bar__action app-bar__action--rotation"
+    }, _react.default.createElement("i", {
+      className: "material-icons"
+    }, "refresh")), savedHasError && _react.default.createElement("button", {
+      className: "app-bar__action app-bar__action--danger",
+      onClick: onSaveRetry
+    }, _react.default.createElement("i", {
+      className: "material-icons"
+    }, "cloud_off"))));
+  });
 };
 
 var _default = AppBar;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","./app-bar.scss":"components/AppBar/app-bar.scss"}],"components/NavigationDrawer/MenuItem.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","../../containers/Settings/SettingsContext":"containers/Settings/SettingsContext.js","./app-bar.scss":"components/AppBar/app-bar.scss"}],"components/NavigationDrawer/MenuItem.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30788,7 +30812,12 @@ var PageNotFound = function PageNotFound() {
 
 var _default = PageNotFound;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","../../images/travolta.gif":"images/travolta.gif","../../components":"components/index.js"}],"containers/Settings/SettingsPage.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","../../images/travolta.gif":"images/travolta.gif","../../components":"components/index.js"}],"containers/Settings/settings.scss":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
+
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"containers/Settings/SettingsPage.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30800,21 +30829,47 @@ var _react = _interopRequireDefault(require("react"));
 
 var _components = require("../../components");
 
+var _SettingsContext = _interopRequireDefault(require("./SettingsContext"));
+
+require("./settings.scss");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var themes = [{
+  key: "default",
+  label: "Padrão"
+}, {
+  key: "classic",
+  label: "Clássico",
+  colorPrimary: "#795548"
+}];
+
 var SettingsPage = function SettingsPage() {
-  return _react.default.createElement("div", null, _react.default.createElement(_components.Header, null, "Temas"), _react.default.createElement("div", {
-    className: "themes"
-  }, _react.default.createElement("div", {
-    className: "themes__item"
-  }, _react.default.createElement("p", null, "Padr\xE3o")), _react.default.createElement("div", {
-    className: "themes__item"
-  }, _react.default.createElement("p", null, "Cl\xE1ssico"))));
+  return _react.default.createElement("div", null, _react.default.createElement(_components.Header, null, "Temas"), _react.default.createElement(_SettingsContext.default.Consumer, null, function (_ref) {
+    var selectedTheme = _ref.theme,
+        toggleTheme = _ref.toggleTheme;
+    return _react.default.createElement("div", {
+      className: "themes"
+    }, themes.map(function (theme) {
+      return _react.default.createElement("button", {
+        key: theme.key,
+        className: "themes__item",
+        style: {
+          backgroundColor: theme.colorPrimary
+        },
+        onClick: function onClick() {
+          toggleTheme(theme);
+        }
+      }, _react.default.createElement("p", null, theme.label, theme.key === selectedTheme.key && _react.default.createElement("i", {
+        className: "material-icons"
+      }, "check")));
+    }));
+  }));
 };
 
 var _default = SettingsPage;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","../../components":"components/index.js"}],"containers/Routes.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","../../components":"components/index.js","./SettingsContext":"containers/Settings/SettingsContext.js","./settings.scss":"containers/Settings/settings.scss"}],"containers/Routes.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30877,7 +30932,6 @@ var Routes = function Routes(_ref) {
     }
   }), _react.default.createElement(_reactRouterDom.Route, {
     path: "/settings",
-    exact: true,
     component: _SettingsPage.default
   }), _react.default.createElement(_reactRouterDom.Route, {
     path: "/about",
@@ -30909,6 +30963,8 @@ var _components = require("../../components");
 var _NoteService = _interopRequireDefault(require("../../services/NoteService"));
 
 var _Routes = _interopRequireWildcard(require("../Routes"));
+
+var _SettingsContext = _interopRequireDefault(require("../Settings/SettingsContext"));
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 
@@ -30951,11 +31007,12 @@ function (_React$Component) {
     }
 
     return _possibleConstructorReturn(_this, (_temp = _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(App)).call.apply(_getPrototypeOf2, [this].concat(args))), _this.state = {
+      theme: {},
       notes: [],
       isLoading: false,
+      isMenuOpen: false,
       reloadHasError: false,
-      savedHasError: false,
-      isMenuOpen: false
+      savedHasError: false
     }, _this.handleAddNote = function (text) {
       _this.setState(function (prevState) {
         var notes = prevState.notes.concat({
@@ -31055,6 +31112,10 @@ function (_React$Component) {
       _this.setState({
         isMenuOpen: false
       });
+    }, _this.handleToggleTheme = function (theme) {
+      _this.setState({
+        theme: theme
+      });
     }, _temp));
   }
 
@@ -31076,12 +31137,18 @@ function (_React$Component) {
       var _this2 = this;
 
       var _this$state = this.state,
+          theme = _this$state.theme,
           notes = _this$state.notes,
           isLoading = _this$state.isLoading,
           isMenuOpen = _this$state.isMenuOpen,
           reloadHasError = _this$state.reloadHasError,
           savedHasError = _this$state.savedHasError;
-      return _react.default.createElement(_reactRouterDom.BrowserRouter, null, _react.default.createElement(_components.PageLayout, {
+      return _react.default.createElement(_reactRouterDom.BrowserRouter, null, _react.default.createElement(_SettingsContext.default.Provider, {
+        value: {
+          theme: theme,
+          toggleTheme: this.handleToggleTheme
+        }
+      }, _react.default.createElement(_components.PageLayout, {
         isLoading: isLoading,
         savedHasError: savedHasError,
         onSaveRetry: function onSaveRetry() {
@@ -31099,7 +31166,7 @@ function (_React$Component) {
         onMove: this.handleMove,
         onDelete: this.handleDelete,
         onEdit: this.handleEdit
-      })));
+      }))));
     }
   }]);
 
@@ -31108,7 +31175,7 @@ function (_React$Component) {
 
 var _default = App;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","uuid/v1":"../node_modules/uuid/v1.js","../../components":"components/index.js","../../services/NoteService":"services/NoteService.js","../Routes":"containers/Routes.js"}],"index.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","uuid/v1":"../node_modules/uuid/v1.js","../../components":"components/index.js","../../services/NoteService":"services/NoteService.js","../Routes":"containers/Routes.js","../Settings/SettingsContext":"containers/Settings/SettingsContext.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
 var _react = _interopRequireDefault(require("react"));
@@ -31150,7 +31217,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "32781" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "46161" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

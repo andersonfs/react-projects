@@ -38,7 +38,7 @@ const Routes = ({
         />
       )}
     />
-    <Route path="/settings" exact component={SettingsPage} />
+    <Route path="/settings" component={SettingsPage} />
     <Route path="/about" exact component={AboutPage} />
     <Route component={PageNotFound} />
   </Switch>
