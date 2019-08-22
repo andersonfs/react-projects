@@ -5,11 +5,10 @@ import uuid from "uuid/v1";
 import { PageLayout } from "../../components";
 import NoteService from "../../services/NoteService";
 import Routes, { menu } from "../Routes";
-import SettingsContext from "../Settings/SettingsContext";
+import SettingsProvider from "../Settings/SettingsProvider";
 
 class App extends React.Component {
   state = {
-    theme: {},
     notes: [],
     isLoading: false,
     isMenuOpen: false,
@@ -99,21 +98,17 @@ class App extends React.Component {
       this.setState({ isLoading: false, savedHasError: true });
     });
   };
+
   handleOpenMenu = () => {
     this.setState({ isMenuOpen: true });
-  }
+  };
 
   handleCloseMenu = () => {
     this.setState({ isMenuOpen: false });
-  }
-
-  handleToggleTheme = theme => {
-    this.setState({ theme });
-  }
+  };
 
   render() {
     const {
-      theme,
       notes,
       isLoading,
       isMenuOpen,
@@ -123,9 +118,7 @@ class App extends React.Component {
 
     return (
       <Router>
-        <SettingsContext.Provider
-          value={{ theme, toggleTheme: this.handleToggleTheme }}
-        >
+        <SettingsProvider>
           <PageLayout
             isLoading={isLoading}
             savedHasError={savedHasError}
@@ -147,7 +140,7 @@ class App extends React.Component {
               onEdit={this.handleEdit}
             />
           </PageLayout>
-        </SettingsContext.Provider>
+        </SettingsProvider>
       </Router>
     );
   }
