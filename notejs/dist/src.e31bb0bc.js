@@ -30354,7 +30354,33 @@ var SettingsContext = _react.default.createContext();
 
 var _default = SettingsContext;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js"}],"components/AppBar/app-bar.scss":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js"}],"containers/Settings/withSettings.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+var _SettingsContext = _interopRequireDefault(require("./SettingsContext"));
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var withSettings = function withSettings(Component) {
+  return function (props) {
+    return _react.default.createElement(_SettingsContext.default.Consumer, null, function (context) {
+      return _react.default.createElement(Component, _extends({}, props, context));
+    });
+  };
+};
+
+var _default = withSettings;
+exports.default = _default;
+},{"react":"../node_modules/react/index.js","./SettingsContext":"containers/Settings/SettingsContext.js"}],"components/AppBar/app-bar.scss":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
@@ -30369,7 +30395,7 @@ exports.default = void 0;
 
 var _react = _interopRequireDefault(require("react"));
 
-var _SettingsContext = _interopRequireDefault(require("../../containers/Settings/SettingsContext"));
+var _withSettings = _interopRequireDefault(require("../../containers/Settings/withSettings"));
 
 require("./app-bar.scss");
 
@@ -30379,39 +30405,38 @@ var AppBar = function AppBar(_ref) {
   var isLoading = _ref.isLoading,
       savedHasError = _ref.savedHasError,
       onSaveRetry = _ref.onSaveRetry,
-      onOpenMenu = _ref.onOpenMenu;
-  return _react.default.createElement(_SettingsContext.default.Consumer, null, function (_ref2) {
-    var theme = _ref2.theme;
-    return _react.default.createElement("div", {
-      className: "app-bar",
-      style: {
-        backgroundColor: theme.colorPrimary
-      }
-    }, _react.default.createElement("div", {
-      className: "app-bar__container"
-    }, _react.default.createElement("button", {
-      className: "app-bar__action",
-      onClick: onOpenMenu
-    }, _react.default.createElement("i", {
-      className: "material-icons"
-    }, "menu")), _react.default.createElement("span", {
-      className: "app-bar__brand"
-    }, "Note.js"), isLoading && _react.default.createElement("button", {
-      className: "app-bar__action app-bar__action--rotation"
-    }, _react.default.createElement("i", {
-      className: "material-icons"
-    }, "refresh")), savedHasError && _react.default.createElement("button", {
-      className: "app-bar__action app-bar__action--danger",
-      onClick: onSaveRetry
-    }, _react.default.createElement("i", {
-      className: "material-icons"
-    }, "cloud_off"))));
-  });
+      onOpenMenu = _ref.onOpenMenu,
+      theme = _ref.theme;
+  return _react.default.createElement("div", {
+    className: "app-bar",
+    style: {
+      backgroundColor: theme.colorPrimary
+    }
+  }, _react.default.createElement("div", {
+    className: "app-bar__container"
+  }, _react.default.createElement("button", {
+    className: "app-bar__action",
+    onClick: onOpenMenu
+  }, _react.default.createElement("i", {
+    className: "material-icons"
+  }, "menu")), _react.default.createElement("span", {
+    className: "app-bar__brand"
+  }, "Note.js"), isLoading && _react.default.createElement("button", {
+    className: "app-bar__action app-bar__action--rotation"
+  }, _react.default.createElement("i", {
+    className: "material-icons"
+  }, "refresh")), savedHasError && _react.default.createElement("button", {
+    className: "app-bar__action app-bar__action--danger",
+    onClick: onSaveRetry
+  }, _react.default.createElement("i", {
+    className: "material-icons"
+  }, "cloud_off"))));
 };
 
-var _default = AppBar;
+var _default = (0, _withSettings.default)(AppBar);
+
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","../../containers/Settings/SettingsContext":"containers/Settings/SettingsContext.js","./app-bar.scss":"components/AppBar/app-bar.scss"}],"components/NavigationDrawer/MenuItem.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","../../containers/Settings/withSettings":"containers/Settings/withSettings.js","./app-bar.scss":"components/AppBar/app-bar.scss"}],"components/NavigationDrawer/MenuItem.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30829,7 +30854,7 @@ var _react = _interopRequireDefault(require("react"));
 
 var _components = require("../../components");
 
-var _SettingsContext = _interopRequireDefault(require("./SettingsContext"));
+var _withSettings = _interopRequireDefault(require("./withSettings"));
 
 require("./settings.scss");
 
@@ -30844,32 +30869,31 @@ var themes = [{
   colorPrimary: "#795548"
 }];
 
-var SettingsPage = function SettingsPage() {
-  return _react.default.createElement("div", null, _react.default.createElement(_components.Header, null, "Temas"), _react.default.createElement(_SettingsContext.default.Consumer, null, function (_ref) {
-    var selectedTheme = _ref.theme,
-        toggleTheme = _ref.toggleTheme;
-    return _react.default.createElement("div", {
-      className: "themes"
-    }, themes.map(function (theme) {
-      return _react.default.createElement("button", {
-        key: theme.key,
-        className: "themes__item",
-        style: {
-          backgroundColor: theme.colorPrimary
-        },
-        onClick: function onClick() {
-          toggleTheme(theme);
-        }
-      }, _react.default.createElement("p", null, theme.label, theme.key === selectedTheme.key && _react.default.createElement("i", {
-        className: "material-icons"
-      }, "check")));
-    }));
-  }));
+var SettingsPage = function SettingsPage(_ref) {
+  var selectedTheme = _ref.theme,
+      toggleTheme = _ref.toggleTheme;
+  return _react.default.createElement("div", null, _react.default.createElement(_components.Header, null, "Temas"), _react.default.createElement("div", {
+    className: "themes"
+  }, themes.map(function (theme) {
+    return _react.default.createElement("button", {
+      key: theme.key,
+      className: "themes__item",
+      style: {
+        backgroundColor: theme.colorPrimary
+      },
+      onClick: function onClick() {
+        toggleTheme(theme);
+      }
+    }, _react.default.createElement("p", null, theme.label, theme.key === selectedTheme.key && _react.default.createElement("i", {
+      className: "material-icons"
+    }, "check")));
+  })));
 };
 
-var _default = SettingsPage;
+var _default = (0, _withSettings.default)(SettingsPage);
+
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","../../components":"components/index.js","./SettingsContext":"containers/Settings/SettingsContext.js","./settings.scss":"containers/Settings/settings.scss"}],"containers/Routes.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","../../components":"components/index.js","./withSettings":"containers/Settings/withSettings.js","./settings.scss":"containers/Settings/settings.scss"}],"containers/Routes.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -31283,7 +31307,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "37229" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "40377" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
