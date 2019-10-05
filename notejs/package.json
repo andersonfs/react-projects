@@ -10,6 +10,7 @@
   "author": "Anderson Firmino",
   "license": "ISC",
   "dependencies": {
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "classnames": "^2.2.6",
     "jslint": "^0.12.1",
     "react": "^16.8.6",

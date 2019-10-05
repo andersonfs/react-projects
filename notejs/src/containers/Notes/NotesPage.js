@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import withNotes from "./withNotes";
 
 import { Error, NewNote, NoteList } from "../../components";
 
@@ -11,13 +12,13 @@ const NotesPage = ({
   onMove,
   onEdit
 }) => {
-  if(reloadHasError) {
+  if (reloadHasError) {
     return <Error onRetry={onRetry} />;
   }
 
   return (
     <Fragment>
-      <NewNote onAddNote = {onAddNote}/>
+      <NewNote onAddNote={onAddNote} />
       <NoteList
         notes={notes}
         onMove={onMove}
@@ -28,4 +29,4 @@ const NotesPage = ({
   );
 };
 
-export default NotesPage;
+export default withNotes(NotesPage);

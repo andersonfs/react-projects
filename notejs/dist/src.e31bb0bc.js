@@ -29693,180 +29693,7 @@ if ("development" !== "production") {
     style: _propTypes.default.object
   });
 }
-},{"@babel/runtime/helpers/esm/inheritsLoose":"../node_modules/@babel/runtime/helpers/esm/inheritsLoose.js","react":"../node_modules/react/index.js","react-router":"../node_modules/react-router/esm/react-router.js","history":"../node_modules/history/esm/history.js","prop-types":"../node_modules/prop-types/index.js","tiny-warning":"../node_modules/tiny-warning/dist/tiny-warning.esm.js","@babel/runtime/helpers/esm/extends":"../node_modules/@babel/runtime/helpers/esm/extends.js","@babel/runtime/helpers/esm/objectWithoutPropertiesLoose":"../node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js","tiny-invariant":"../node_modules/tiny-invariant/dist/tiny-invariant.esm.js"}],"../node_modules/uuid/lib/rng-browser.js":[function(require,module,exports) {
-// Unique ID creation requires a high quality random # generator.  In the
-// browser this is a little complicated due to unknown quality of Math.random()
-// and inconsistent support for the `crypto` API.  We do the best we can via
-// feature-detection
-
-// getRandomValues needs to be invoked in a context where "this" is a Crypto
-// implementation. Also, find the complete implementation of crypto on IE11.
-var getRandomValues = (typeof(crypto) != 'undefined' && crypto.getRandomValues && crypto.getRandomValues.bind(crypto)) ||
-                      (typeof(msCrypto) != 'undefined' && typeof window.msCrypto.getRandomValues == 'function' && msCrypto.getRandomValues.bind(msCrypto));
-
-if (getRandomValues) {
-  // WHATWG crypto RNG - http://wiki.whatwg.org/wiki/Crypto
-  var rnds8 = new Uint8Array(16); // eslint-disable-line no-undef
-
-  module.exports = function whatwgRNG() {
-    getRandomValues(rnds8);
-    return rnds8;
-  };
-} else {
-  // Math.random()-based (RNG)
-  //
-  // If all else fails, use Math.random().  It's fast, but is of unspecified
-  // quality.
-  var rnds = new Array(16);
-
-  module.exports = function mathRNG() {
-    for (var i = 0, r; i < 16; i++) {
-      if ((i & 0x03) === 0) r = Math.random() * 0x100000000;
-      rnds[i] = r >>> ((i & 0x03) << 3) & 0xff;
-    }
-
-    return rnds;
-  };
-}
-
-},{}],"../node_modules/uuid/lib/bytesToUuid.js":[function(require,module,exports) {
-/**
- * Convert array of 16 byte values to UUID string format of the form:
- * XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
- */
-var byteToHex = [];
-for (var i = 0; i < 256; ++i) {
-  byteToHex[i] = (i + 0x100).toString(16).substr(1);
-}
-
-function bytesToUuid(buf, offset) {
-  var i = offset || 0;
-  var bth = byteToHex;
-  // join used to fix memory issue caused by concatenation: https://bugs.chromium.org/p/v8/issues/detail?id=3175#c4
-  return ([bth[buf[i++]], bth[buf[i++]], 
-	bth[buf[i++]], bth[buf[i++]], '-',
-	bth[buf[i++]], bth[buf[i++]], '-',
-	bth[buf[i++]], bth[buf[i++]], '-',
-	bth[buf[i++]], bth[buf[i++]], '-',
-	bth[buf[i++]], bth[buf[i++]],
-	bth[buf[i++]], bth[buf[i++]],
-	bth[buf[i++]], bth[buf[i++]]]).join('');
-}
-
-module.exports = bytesToUuid;
-
-},{}],"../node_modules/uuid/v1.js":[function(require,module,exports) {
-var rng = require('./lib/rng');
-var bytesToUuid = require('./lib/bytesToUuid');
-
-// **`v1()` - Generate time-based UUID**
-//
-// Inspired by https://github.com/LiosK/UUID.js
-// and http://docs.python.org/library/uuid.html
-
-var _nodeId;
-var _clockseq;
-
-// Previous uuid creation time
-var _lastMSecs = 0;
-var _lastNSecs = 0;
-
-// See https://github.com/broofa/node-uuid for API details
-function v1(options, buf, offset) {
-  var i = buf && offset || 0;
-  var b = buf || [];
-
-  options = options || {};
-  var node = options.node || _nodeId;
-  var clockseq = options.clockseq !== undefined ? options.clockseq : _clockseq;
-
-  // node and clockseq need to be initialized to random values if they're not
-  // specified.  We do this lazily to minimize issues related to insufficient
-  // system entropy.  See #189
-  if (node == null || clockseq == null) {
-    var seedBytes = rng();
-    if (node == null) {
-      // Per 4.5, create and 48-bit node id, (47 random bits + multicast bit = 1)
-      node = _nodeId = [
-        seedBytes[0] | 0x01,
-        seedBytes[1], seedBytes[2], seedBytes[3], seedBytes[4], seedBytes[5]
-      ];
-    }
-    if (clockseq == null) {
-      // Per 4.2.2, randomize (14 bit) clockseq
-      clockseq = _clockseq = (seedBytes[6] << 8 | seedBytes[7]) & 0x3fff;
-    }
-  }
-
-  // UUID timestamps are 100 nano-second units since the Gregorian epoch,
-  // (1582-10-15 00:00).  JSNumbers aren't precise enough for this, so
-  // time is handled internally as 'msecs' (integer milliseconds) and 'nsecs'
-  // (100-nanoseconds offset from msecs) since unix epoch, 1970-01-01 00:00.
-  var msecs = options.msecs !== undefined ? options.msecs : new Date().getTime();
-
-  // Per 4.2.1.2, use count of uuid's generated during the current clock
-  // cycle to simulate higher resolution clock
-  var nsecs = options.nsecs !== undefined ? options.nsecs : _lastNSecs + 1;
-
-  // Time since last uuid creation (in msecs)
-  var dt = (msecs - _lastMSecs) + (nsecs - _lastNSecs)/10000;
-
-  // Per 4.2.1.2, Bump clockseq on clock regression
-  if (dt < 0 && options.clockseq === undefined) {
-    clockseq = clockseq + 1 & 0x3fff;
-  }
-
-  // Reset nsecs if clock regresses (new clockseq) or we've moved onto a new
-  // time interval
-  if ((dt < 0 || msecs > _lastMSecs) && options.nsecs === undefined) {
-    nsecs = 0;
-  }
-
-  // Per 4.2.1.2 Throw error if too many uuids are requested
-  if (nsecs >= 10000) {
-    throw new Error('uuid.v1(): Can\'t create more than 10M uuids/sec');
-  }
-
-  _lastMSecs = msecs;
-  _lastNSecs = nsecs;
-  _clockseq = clockseq;
-
-  // Per 4.1.4 - Convert from unix epoch to Gregorian epoch
-  msecs += 12219292800000;
-
-  // `time_low`
-  var tl = ((msecs & 0xfffffff) * 10000 + nsecs) % 0x100000000;
-  b[i++] = tl >>> 24 & 0xff;
-  b[i++] = tl >>> 16 & 0xff;
-  b[i++] = tl >>> 8 & 0xff;
-  b[i++] = tl & 0xff;
-
-  // `time_mid`
-  var tmh = (msecs / 0x100000000 * 10000) & 0xfffffff;
-  b[i++] = tmh >>> 8 & 0xff;
-  b[i++] = tmh & 0xff;
-
-  // `time_high_and_version`
-  b[i++] = tmh >>> 24 & 0xf | 0x10; // include version
-  b[i++] = tmh >>> 16 & 0xff;
-
-  // `clock_seq_hi_and_reserved` (Per 4.2.2 - include variant)
-  b[i++] = clockseq >>> 8 | 0x80;
-
-  // `clock_seq_low`
-  b[i++] = clockseq & 0xff;
-
-  // `node`
-  for (var n = 0; n < 6; ++n) {
-    b[i + n] = node[n];
-  }
-
-  return buf ? buf : bytesToUuid(b);
-}
-
-module.exports = v1;
-
-},{"./lib/rng":"../node_modules/uuid/lib/rng-browser.js","./lib/bytesToUuid":"../node_modules/uuid/lib/bytesToUuid.js"}],"components/Button/button.scss":[function(require,module,exports) {
+},{"@babel/runtime/helpers/esm/inheritsLoose":"../node_modules/@babel/runtime/helpers/esm/inheritsLoose.js","react":"../node_modules/react/index.js","react-router":"../node_modules/react-router/esm/react-router.js","history":"../node_modules/history/esm/history.js","prop-types":"../node_modules/prop-types/index.js","tiny-warning":"../node_modules/tiny-warning/dist/tiny-warning.esm.js","@babel/runtime/helpers/esm/extends":"../node_modules/@babel/runtime/helpers/esm/extends.js","@babel/runtime/helpers/esm/objectWithoutPropertiesLoose":"../node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js","tiny-invariant":"../node_modules/tiny-invariant/dist/tiny-invariant.esm.js"}],"components/Button/button.scss":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
@@ -30409,9 +30236,7 @@ var AppBar = function AppBar(_ref) {
       theme = _ref.theme;
   return _react.default.createElement("div", {
     className: "app-bar",
-    style: {
-      backgroundColor: theme.colorPrimary
-    }
+    style: theme && theme.navBar
   }, _react.default.createElement("div", {
     className: "app-bar__container"
   }, _react.default.createElement("button", {
@@ -30528,7 +30353,49 @@ var NavigationDrawer = function NavigationDrawer(_ref) {
 var _default = (0, _reactRouterDom.withRouter)(NavigationDrawer);
 
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","classnames":"../node_modules/classnames/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","./MenuItem":"components/NavigationDrawer/MenuItem.js","./navigation-drawer.scss":"components/NavigationDrawer/navigation-drawer.scss"}],"components/PageLayout/page-layout.scss":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","classnames":"../node_modules/classnames/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","./MenuItem":"components/NavigationDrawer/MenuItem.js","./navigation-drawer.scss":"components/NavigationDrawer/navigation-drawer.scss"}],"containers/Notes/NotesContext.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var NotesContext = _react.default.createContext();
+
+var _default = NotesContext;
+exports.default = _default;
+},{"react":"../node_modules/react/index.js"}],"containers/Notes/withNotes.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+var _NotesContext = _interopRequireDefault(require("./NotesContext"));
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var withNotes = function withNotes(Component) {
+  return function (props) {
+    return _react.default.createElement(_NotesContext.default.Consumer, null, function (context) {
+      return _react.default.createElement(Component, _extends({}, props, context));
+    });
+  };
+};
+
+var _default = withNotes;
+exports.default = _default;
+},{"react":"../node_modules/react/index.js","./NotesContext":"containers/Notes/NotesContext.js"}],"components/PageLayout/page-layout.scss":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
@@ -30546,6 +30413,8 @@ var _react = _interopRequireDefault(require("react"));
 var _AppBar = _interopRequireDefault(require("../AppBar/AppBar"));
 
 var _NavigationDrawer = _interopRequireDefault(require("../NavigationDrawer/NavigationDrawer"));
+
+var _withNotes = _interopRequireDefault(require("../../containers/Notes/withNotes"));
 
 require("./page-layout.scss");
 
@@ -30574,9 +30443,10 @@ var PageLayout = function PageLayout(_ref) {
   }));
 };
 
-var _default = PageLayout;
+var _default = (0, _withNotes.default)(PageLayout);
+
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","../AppBar/AppBar":"components/AppBar/AppBar.js","../NavigationDrawer/NavigationDrawer":"components/NavigationDrawer/NavigationDrawer.js","./page-layout.scss":"components/PageLayout/page-layout.scss"}],"components/Button/ButtonLink.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","../AppBar/AppBar":"components/AppBar/AppBar.js","../NavigationDrawer/NavigationDrawer":"components/NavigationDrawer/NavigationDrawer.js","../../containers/Notes/withNotes":"containers/Notes/withNotes.js","./page-layout.scss":"components/PageLayout/page-layout.scss"}],"components/Button/ButtonLink.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30683,68 +30553,7 @@ var _ButtonLink = _interopRequireDefault(require("./Button/ButtonLink"));
 var _Center = _interopRequireDefault(require("./Center/Center"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"./Error/Error":"components/Error/Error.js","./NewNote/NewNote":"components/NewNote/NewNote.js","./Note/Note":"components/Note/Note.js","./NoteList/NoteList":"components/NoteList/NoteList.js","./PageLayout/PageLayout":"components/PageLayout/PageLayout.js","./Header/Header":"components/Header/Header.js","./Button/Button":"components/Button/Button.js","./Button/ButtonLink":"components/Button/ButtonLink.js","./Center/Center":"components/Center/Center.js"}],"services/NoteService.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var failedLoadAttemps = 2;
-var failedSaveAttemps = 2;
-
-var NoteService =
-/*#__PURE__*/
-function () {
-  function NoteService() {
-    _classCallCheck(this, NoteService);
-  }
-
-  _createClass(NoteService, null, [{
-    key: "load",
-    value: function load() {
-      return new Promise(function (resolve, reject) {
-        setTimeout(function () {
-          if (failedLoadAttemps > 1) {
-            var notes = window.localStorage.getItem("notes");
-            resolve(notes ? JSON.parse(notes) : []);
-          } else {
-            reject();
-            failedLoadAttemps++;
-          }
-        }, 2000);
-      });
-    }
-  }, {
-    key: "save",
-    value: function save(notes) {
-      return new Promise(function (resolve, reject) {
-        setTimeout(function () {
-          if (failedSaveAttemps > 1) {
-            window.localStorage.setItem("notes", JSON.stringify(notes));
-            resolve();
-          } else {
-            reject();
-            failedSaveAttemps++;
-          }
-        }, 2000);
-      });
-    }
-  }]);
-
-  return NoteService;
-}();
-
-var _default = NoteService;
-exports.default = _default;
-},{}],"containers/About/AboutPage.js":[function(require,module,exports) {
+},{"./Error/Error":"components/Error/Error.js","./NewNote/NewNote":"components/NewNote/NewNote.js","./Note/Note":"components/Note/Note.js","./NoteList/NoteList":"components/NoteList/NoteList.js","./PageLayout/PageLayout":"components/PageLayout/PageLayout.js","./Header/Header":"components/Header/Header.js","./Button/Button":"components/Button/Button.js","./Button/ButtonLink":"components/Button/ButtonLink.js","./Center/Center":"components/Center/Center.js"}],"containers/About/AboutPage.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30776,7 +30585,11 @@ exports.default = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
+var _withNotes = _interopRequireDefault(require("./withNotes"));
+
 var _components = require("../../components");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 
@@ -30805,9 +30618,10 @@ var NotesPage = function NotesPage(_ref) {
   }));
 };
 
-var _default = NotesPage;
+var _default = (0, _withNotes.default)(NotesPage);
+
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","../../components":"components/index.js"}],"images/travolta.gif":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","./withNotes":"containers/Notes/withNotes.js","../../components":"components/index.js"}],"images/travolta.gif":[function(require,module,exports) {
 module.exports = "/travolta.a8191ff1.gif";
 },{}],"containers/PageNotFound/PageNotFound.js":[function(require,module,exports) {
 "use strict";
@@ -30829,7 +30643,7 @@ var PageNotFound = function PageNotFound() {
   return _react.default.createElement(_components.Center, null, _react.default.createElement(_components.Header, null, "Ops!"), _react.default.createElement("div", null, _react.default.createElement("img", {
     src: _travolta.default,
     alt: "John Travolta",
-    width: "200"
+    width: "200px"
   })), _react.default.createElement(_components.ButtonLink, {
     to: "/"
   }, "Voltar para o in\xEDcio"));
@@ -30866,7 +30680,16 @@ var themes = [{
 }, {
   key: "classic",
   label: "Clássico",
-  colorPrimary: "#795548"
+  navBar: {
+    backgroundColor: "#795548"
+  }
+}, {
+  key: "light",
+  label: "Light",
+  navBar: {
+    backgroundColor: "#fff",
+    color: "#212121"
+  }
 }];
 
 var SettingsPage = function SettingsPage(_ref) {
@@ -30878,9 +30701,7 @@ var SettingsPage = function SettingsPage(_ref) {
     return _react.default.createElement("button", {
       key: theme.key,
       className: "themes__item",
-      style: {
-        backgroundColor: theme.colorPrimary
-      },
+      style: theme.navBar,
       onClick: function onClick() {
         toggleTheme(theme);
       }
@@ -30913,8 +30734,6 @@ var _PageNotFound = _interopRequireDefault(require("./PageNotFound/PageNotFound"
 
 var _SettingsPage = _interopRequireDefault(require("./Settings/SettingsPage"));
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var menu = [{
@@ -30932,28 +30751,11 @@ var menu = [{
 }];
 exports.menu = menu;
 
-var Routes = function Routes(_ref) {
-  var notes = _ref.notes,
-      reloadHasError = _ref.reloadHasError,
-      onRetry = _ref.onRetry,
-      onAddNote = _ref.onAddNote,
-      onMove = _ref.onMove,
-      onDelete = _ref.onDelete,
-      onEdit = _ref.onEdit;
+var Routes = function Routes() {
   return _react.default.createElement(_reactRouterDom.Switch, null, _react.default.createElement(_reactRouterDom.Route, {
     path: "/",
     exact: true,
-    render: function render(props) {
-      return _react.default.createElement(_NotesPage.default, _extends({
-        notes: notes,
-        reloadHasError: reloadHasError,
-        onRetry: onRetry,
-        onAddNote: onAddNote,
-        onMove: onMove,
-        onDelete: onDelete,
-        onEdit: onEdit
-      }, props));
-    }
+    component: _NotesPage.default
   }), _react.default.createElement(_reactRouterDom.Route, {
     path: "/settings",
     component: _SettingsPage.default
@@ -31045,7 +30847,180 @@ function (_React$Component) {
 
 var _default = SettingsProvider;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","./SettingsContext":"containers/Settings/SettingsContext.js"}],"containers/App/App.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","./SettingsContext":"containers/Settings/SettingsContext.js"}],"../node_modules/uuid/lib/rng-browser.js":[function(require,module,exports) {
+// Unique ID creation requires a high quality random # generator.  In the
+// browser this is a little complicated due to unknown quality of Math.random()
+// and inconsistent support for the `crypto` API.  We do the best we can via
+// feature-detection
+
+// getRandomValues needs to be invoked in a context where "this" is a Crypto
+// implementation. Also, find the complete implementation of crypto on IE11.
+var getRandomValues = (typeof(crypto) != 'undefined' && crypto.getRandomValues && crypto.getRandomValues.bind(crypto)) ||
+                      (typeof(msCrypto) != 'undefined' && typeof window.msCrypto.getRandomValues == 'function' && msCrypto.getRandomValues.bind(msCrypto));
+
+if (getRandomValues) {
+  // WHATWG crypto RNG - http://wiki.whatwg.org/wiki/Crypto
+  var rnds8 = new Uint8Array(16); // eslint-disable-line no-undef
+
+  module.exports = function whatwgRNG() {
+    getRandomValues(rnds8);
+    return rnds8;
+  };
+} else {
+  // Math.random()-based (RNG)
+  //
+  // If all else fails, use Math.random().  It's fast, but is of unspecified
+  // quality.
+  var rnds = new Array(16);
+
+  module.exports = function mathRNG() {
+    for (var i = 0, r; i < 16; i++) {
+      if ((i & 0x03) === 0) r = Math.random() * 0x100000000;
+      rnds[i] = r >>> ((i & 0x03) << 3) & 0xff;
+    }
+
+    return rnds;
+  };
+}
+
+},{}],"../node_modules/uuid/lib/bytesToUuid.js":[function(require,module,exports) {
+/**
+ * Convert array of 16 byte values to UUID string format of the form:
+ * XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+ */
+var byteToHex = [];
+for (var i = 0; i < 256; ++i) {
+  byteToHex[i] = (i + 0x100).toString(16).substr(1);
+}
+
+function bytesToUuid(buf, offset) {
+  var i = offset || 0;
+  var bth = byteToHex;
+  // join used to fix memory issue caused by concatenation: https://bugs.chromium.org/p/v8/issues/detail?id=3175#c4
+  return ([bth[buf[i++]], bth[buf[i++]], 
+	bth[buf[i++]], bth[buf[i++]], '-',
+	bth[buf[i++]], bth[buf[i++]], '-',
+	bth[buf[i++]], bth[buf[i++]], '-',
+	bth[buf[i++]], bth[buf[i++]], '-',
+	bth[buf[i++]], bth[buf[i++]],
+	bth[buf[i++]], bth[buf[i++]],
+	bth[buf[i++]], bth[buf[i++]]]).join('');
+}
+
+module.exports = bytesToUuid;
+
+},{}],"../node_modules/uuid/v1.js":[function(require,module,exports) {
+var rng = require('./lib/rng');
+var bytesToUuid = require('./lib/bytesToUuid');
+
+// **`v1()` - Generate time-based UUID**
+//
+// Inspired by https://github.com/LiosK/UUID.js
+// and http://docs.python.org/library/uuid.html
+
+var _nodeId;
+var _clockseq;
+
+// Previous uuid creation time
+var _lastMSecs = 0;
+var _lastNSecs = 0;
+
+// See https://github.com/broofa/node-uuid for API details
+function v1(options, buf, offset) {
+  var i = buf && offset || 0;
+  var b = buf || [];
+
+  options = options || {};
+  var node = options.node || _nodeId;
+  var clockseq = options.clockseq !== undefined ? options.clockseq : _clockseq;
+
+  // node and clockseq need to be initialized to random values if they're not
+  // specified.  We do this lazily to minimize issues related to insufficient
+  // system entropy.  See #189
+  if (node == null || clockseq == null) {
+    var seedBytes = rng();
+    if (node == null) {
+      // Per 4.5, create and 48-bit node id, (47 random bits + multicast bit = 1)
+      node = _nodeId = [
+        seedBytes[0] | 0x01,
+        seedBytes[1], seedBytes[2], seedBytes[3], seedBytes[4], seedBytes[5]
+      ];
+    }
+    if (clockseq == null) {
+      // Per 4.2.2, randomize (14 bit) clockseq
+      clockseq = _clockseq = (seedBytes[6] << 8 | seedBytes[7]) & 0x3fff;
+    }
+  }
+
+  // UUID timestamps are 100 nano-second units since the Gregorian epoch,
+  // (1582-10-15 00:00).  JSNumbers aren't precise enough for this, so
+  // time is handled internally as 'msecs' (integer milliseconds) and 'nsecs'
+  // (100-nanoseconds offset from msecs) since unix epoch, 1970-01-01 00:00.
+  var msecs = options.msecs !== undefined ? options.msecs : new Date().getTime();
+
+  // Per 4.2.1.2, use count of uuid's generated during the current clock
+  // cycle to simulate higher resolution clock
+  var nsecs = options.nsecs !== undefined ? options.nsecs : _lastNSecs + 1;
+
+  // Time since last uuid creation (in msecs)
+  var dt = (msecs - _lastMSecs) + (nsecs - _lastNSecs)/10000;
+
+  // Per 4.2.1.2, Bump clockseq on clock regression
+  if (dt < 0 && options.clockseq === undefined) {
+    clockseq = clockseq + 1 & 0x3fff;
+  }
+
+  // Reset nsecs if clock regresses (new clockseq) or we've moved onto a new
+  // time interval
+  if ((dt < 0 || msecs > _lastMSecs) && options.nsecs === undefined) {
+    nsecs = 0;
+  }
+
+  // Per 4.2.1.2 Throw error if too many uuids are requested
+  if (nsecs >= 10000) {
+    throw new Error('uuid.v1(): Can\'t create more than 10M uuids/sec');
+  }
+
+  _lastMSecs = msecs;
+  _lastNSecs = nsecs;
+  _clockseq = clockseq;
+
+  // Per 4.1.4 - Convert from unix epoch to Gregorian epoch
+  msecs += 12219292800000;
+
+  // `time_low`
+  var tl = ((msecs & 0xfffffff) * 10000 + nsecs) % 0x100000000;
+  b[i++] = tl >>> 24 & 0xff;
+  b[i++] = tl >>> 16 & 0xff;
+  b[i++] = tl >>> 8 & 0xff;
+  b[i++] = tl & 0xff;
+
+  // `time_mid`
+  var tmh = (msecs / 0x100000000 * 10000) & 0xfffffff;
+  b[i++] = tmh >>> 8 & 0xff;
+  b[i++] = tmh & 0xff;
+
+  // `time_high_and_version`
+  b[i++] = tmh >>> 24 & 0xf | 0x10; // include version
+  b[i++] = tmh >>> 16 & 0xff;
+
+  // `clock_seq_hi_and_reserved` (Per 4.2.2 - include variant)
+  b[i++] = clockseq >>> 8 | 0x80;
+
+  // `clock_seq_low`
+  b[i++] = clockseq & 0xff;
+
+  // `node`
+  for (var n = 0; n < 6; ++n) {
+    b[i + n] = node[n];
+  }
+
+  return buf ? buf : bytesToUuid(b);
+}
+
+module.exports = v1;
+
+},{"./lib/rng":"../node_modules/uuid/lib/rng-browser.js","./lib/bytesToUuid":"../node_modules/uuid/lib/bytesToUuid.js"}],"services/NoteService.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -31053,23 +31028,80 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _react = _interopRequireDefault(require("react"));
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _reactRouterDom = require("react-router-dom");
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var failedLoadAttemps = 2;
+var failedSaveAttemps = 2;
+
+var NoteService =
+/*#__PURE__*/
+function () {
+  function NoteService() {
+    _classCallCheck(this, NoteService);
+  }
+
+  _createClass(NoteService, null, [{
+    key: "load",
+    value: function load() {
+      return new Promise(function (resolve, reject) {
+        setTimeout(function () {
+          if (failedLoadAttemps > 1) {
+            var notes = window.localStorage.getItem("notes");
+            resolve(notes ? JSON.parse(notes) : []);
+          } else {
+            reject();
+            failedLoadAttemps++;
+          }
+        }, 2000);
+      });
+    }
+  }, {
+    key: "save",
+    value: function save(notes) {
+      return new Promise(function (resolve, reject) {
+        setTimeout(function () {
+          if (failedSaveAttemps > 1) {
+            window.localStorage.setItem("notes", JSON.stringify(notes));
+            resolve();
+          } else {
+            reject();
+            failedSaveAttemps++;
+          }
+        }, 2000);
+      });
+    }
+  }]);
+
+  return NoteService;
+}();
+
+var _default = NoteService;
+exports.default = _default;
+},{}],"containers/Notes/NotesProvider.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireWildcard(require("react"));
 
 var _v = _interopRequireDefault(require("uuid/v1"));
 
-var _components = require("../../components");
+var _NotesContext = _interopRequireDefault(require("./NotesContext"));
 
 var _NoteService = _interopRequireDefault(require("../../services/NoteService"));
 
-var _Routes = _interopRequireWildcard(require("../Routes"));
-
-var _SettingsProvider = _interopRequireDefault(require("../Settings/SettingsProvider"));
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -31089,28 +31121,27 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-var App =
+var NotesProvider =
 /*#__PURE__*/
-function (_React$Component) {
-  _inherits(App, _React$Component);
+function (_Component) {
+  _inherits(NotesProvider, _Component);
 
-  function App() {
+  function NotesProvider() {
     var _getPrototypeOf2;
 
     var _this;
 
     var _temp;
 
-    _classCallCheck(this, App);
+    _classCallCheck(this, NotesProvider);
 
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
 
-    return _possibleConstructorReturn(_this, (_temp = _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(App)).call.apply(_getPrototypeOf2, [this].concat(args))), _this.state = {
+    return _possibleConstructorReturn(_this, (_temp = _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(NotesProvider)).call.apply(_getPrototypeOf2, [this].concat(args))), _this.state = {
       notes: [],
       isLoading: false,
-      isMenuOpen: false,
       reloadHasError: false,
       savedHasError: false
     }, _this.handleAddNote = function (text) {
@@ -31204,18 +31235,10 @@ function (_React$Component) {
           savedHasError: true
         });
       });
-    }, _this.handleOpenMenu = function () {
-      _this.setState({
-        isMenuOpen: true
-      });
-    }, _this.handleCloseMenu = function () {
-      _this.setState({
-        isMenuOpen: false
-      });
     }, _temp));
   }
 
-  _createClass(App, [{
+  _createClass(NotesProvider, [{
     key: "componentDidCatch",
     value: function componentDidCatch() {
       this.setState({
@@ -31232,31 +31255,109 @@ function (_React$Component) {
     value: function render() {
       var _this2 = this;
 
-      var _this$state = this.state,
-          notes = _this$state.notes,
-          isLoading = _this$state.isLoading,
-          isMenuOpen = _this$state.isMenuOpen,
-          reloadHasError = _this$state.reloadHasError,
-          savedHasError = _this$state.savedHasError;
-      return _react.default.createElement(_reactRouterDom.BrowserRouter, null, _react.default.createElement(_SettingsProvider.default, null, _react.default.createElement(_components.PageLayout, {
-        isLoading: isLoading,
-        savedHasError: savedHasError,
-        onSaveRetry: function onSaveRetry() {
-          _this2.handleSave(notes);
-        },
-        onOpenMenu: this.handleOpenMenu,
+      return _react.default.createElement(_NotesContext.default.Provider, {
+        value: _extends({}, this.state, {
+          onSaveRetry: function onSaveRetry() {
+            _this2.handleSave(_this2.state.notes);
+          },
+          onRetry: this.handleReload,
+          onAddNote: this.handleAddNote,
+          onMove: this.handleMove,
+          onDelete: this.handleDelete,
+          onEdit: this.handleEdit
+        })
+      }, this.props.children);
+    }
+  }]);
+
+  return NotesProvider;
+}(_react.Component);
+
+var _default = NotesProvider;
+exports.default = _default;
+},{"react":"../node_modules/react/index.js","uuid/v1":"../node_modules/uuid/v1.js","./NotesContext":"containers/Notes/NotesContext.js","../../services/NoteService":"services/NoteService.js"}],"containers/App/App.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+var _reactRouterDom = require("react-router-dom");
+
+var _components = require("../../components");
+
+var _Routes = _interopRequireWildcard(require("../Routes"));
+
+var _SettingsProvider = _interopRequireDefault(require("../Settings/SettingsProvider"));
+
+var _NotesProvider = _interopRequireDefault(require("../Notes/NotesProvider"));
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var App =
+/*#__PURE__*/
+function (_React$Component) {
+  _inherits(App, _React$Component);
+
+  function App() {
+    var _getPrototypeOf2;
+
+    var _this;
+
+    var _temp;
+
+    _classCallCheck(this, App);
+
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _possibleConstructorReturn(_this, (_temp = _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(App)).call.apply(_getPrototypeOf2, [this].concat(args))), _this.state = {
+      isMenuOpen: false
+    }, _this.handleOpenMenu = function () {
+      _this.setState({
+        isMenuOpen: true
+      });
+    }, _this.handleCloseMenu = function () {
+      _this.setState({
+        isMenuOpen: false
+      });
+    }, _temp));
+  }
+
+  _createClass(App, [{
+    key: "render",
+    value: function render() {
+      var isMenuOpen = this.state.isMenuOpen;
+      return _react.default.createElement(_reactRouterDom.BrowserRouter, null, _react.default.createElement(_SettingsProvider.default, null, _react.default.createElement(_NotesProvider.default, null, _react.default.createElement(_components.PageLayout, {
         isMenuOpen: isMenuOpen,
-        onCloseMenu: this.handleCloseMenu,
-        menu: _Routes.menu
-      }, _react.default.createElement(_Routes.default, {
-        notes: notes,
-        reloadHasError: reloadHasError,
-        onRetry: this.handleReload,
-        onAddNote: this.handleAddNote,
-        onMove: this.handleMove,
-        onDelete: this.handleDelete,
-        onEdit: this.handleEdit
-      }))));
+        menu: _Routes.menu,
+        onOpenMenu: this.handleOpenMenu,
+        onCloseMenu: this.handleCloseMenu
+      }, _react.default.createElement(_Routes.default, null)))));
     }
   }]);
 
@@ -31265,7 +31366,7 @@ function (_React$Component) {
 
 var _default = App;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","uuid/v1":"../node_modules/uuid/v1.js","../../components":"components/index.js","../../services/NoteService":"services/NoteService.js","../Routes":"containers/Routes.js","../Settings/SettingsProvider":"containers/Settings/SettingsProvider.js"}],"index.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","../../components":"components/index.js","../Routes":"containers/Routes.js","../Settings/SettingsProvider":"containers/Settings/SettingsProvider.js","../Notes/NotesProvider":"containers/Notes/NotesProvider.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
 var _react = _interopRequireDefault(require("react"));
@@ -31307,7 +31408,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "40377" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "38617" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

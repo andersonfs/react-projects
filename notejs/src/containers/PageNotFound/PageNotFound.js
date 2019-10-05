@@ -11,7 +11,7 @@ const PageNotFound = () => (
       <img
         src={Travolta}
         alt="John Travolta"
-        width="200"/>
+        width="200px"/>
     </div>
     <ButtonLink to="/">Voltar para o início</ButtonLink>
   </Center>
