@@ -30165,7 +30165,34 @@ var NoteList = function NoteList(_ref) {
 
 var _default = NoteList;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","../Note/Note":"components/Note/Note.js","./note-list.scss":"components/NoteList/note-list.scss"}],"containers/Settings/SettingsContext.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","../Note/Note":"components/Note/Note.js","./note-list.scss":"components/NoteList/note-list.scss"}],"components/Button/ButtonLink.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+var _reactRouterDom = require("react-router-dom");
+
+require("./button.scss");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var ButtonLink = function ButtonLink(_ref) {
+  var children = _ref.children,
+      to = _ref.to;
+  return _react.default.createElement("div", null, _react.default.createElement(_reactRouterDom.Link, {
+    className: "button",
+    to: to
+  }, children));
+};
+
+var _default = ButtonLink;
+exports.default = _default;
+},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","./button.scss":"components/Button/button.scss"}],"containers/Settings/SettingsContext.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30353,7 +30380,131 @@ var NavigationDrawer = function NavigationDrawer(_ref) {
 var _default = (0, _reactRouterDom.withRouter)(NavigationDrawer);
 
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","classnames":"../node_modules/classnames/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","./MenuItem":"components/NavigationDrawer/MenuItem.js","./navigation-drawer.scss":"components/NavigationDrawer/navigation-drawer.scss"}],"containers/Notes/NotesContext.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","classnames":"../node_modules/classnames/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","./MenuItem":"components/NavigationDrawer/MenuItem.js","./navigation-drawer.scss":"components/NavigationDrawer/navigation-drawer.scss"}],"components/Container/container.scss":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
+
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"components/Container/Container.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+require("./container.scss");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Container = function Container(_ref) {
+  var children = _ref.children;
+  return _react.default.createElement("div", {
+    className: "container"
+  }, children);
+};
+
+var _default = Container;
+exports.default = _default;
+},{"react":"../node_modules/react/index.js","./container.scss":"components/Container/container.scss"}],"components/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+Object.defineProperty(exports, "Error", {
+  enumerable: true,
+  get: function () {
+    return _Error.default;
+  }
+});
+Object.defineProperty(exports, "NewNote", {
+  enumerable: true,
+  get: function () {
+    return _NewNote.default;
+  }
+});
+Object.defineProperty(exports, "Note", {
+  enumerable: true,
+  get: function () {
+    return _Note.default;
+  }
+});
+Object.defineProperty(exports, "NoteList", {
+  enumerable: true,
+  get: function () {
+    return _NoteList.default;
+  }
+});
+Object.defineProperty(exports, "Header", {
+  enumerable: true,
+  get: function () {
+    return _Header.default;
+  }
+});
+Object.defineProperty(exports, "Button", {
+  enumerable: true,
+  get: function () {
+    return _Button.default;
+  }
+});
+Object.defineProperty(exports, "ButtonLink", {
+  enumerable: true,
+  get: function () {
+    return _ButtonLink.default;
+  }
+});
+Object.defineProperty(exports, "Center", {
+  enumerable: true,
+  get: function () {
+    return _Center.default;
+  }
+});
+Object.defineProperty(exports, "AppBar", {
+  enumerable: true,
+  get: function () {
+    return _AppBar.default;
+  }
+});
+Object.defineProperty(exports, "NavigationDrawer", {
+  enumerable: true,
+  get: function () {
+    return _NavigationDrawer.default;
+  }
+});
+Object.defineProperty(exports, "Container", {
+  enumerable: true,
+  get: function () {
+    return _Container.default;
+  }
+});
+
+var _Error = _interopRequireDefault(require("./Error/Error"));
+
+var _NewNote = _interopRequireDefault(require("./NewNote/NewNote"));
+
+var _Note = _interopRequireDefault(require("./Note/Note"));
+
+var _NoteList = _interopRequireDefault(require("./NoteList/NoteList"));
+
+var _Header = _interopRequireDefault(require("./Header/Header"));
+
+var _Button = _interopRequireDefault(require("./Button/Button"));
+
+var _ButtonLink = _interopRequireDefault(require("./Button/ButtonLink"));
+
+var _Center = _interopRequireDefault(require("./Center/Center"));
+
+var _AppBar = _interopRequireDefault(require("./AppBar/AppBar"));
+
+var _NavigationDrawer = _interopRequireDefault(require("./NavigationDrawer/NavigationDrawer"));
+
+var _Container = _interopRequireDefault(require("./Container/Container"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+},{"./Error/Error":"components/Error/Error.js","./NewNote/NewNote":"components/NewNote/NewNote.js","./Note/Note":"components/Note/Note.js","./NoteList/NoteList":"components/NoteList/NoteList.js","./Header/Header":"components/Header/Header.js","./Button/Button":"components/Button/Button.js","./Button/ButtonLink":"components/Button/ButtonLink.js","./Center/Center":"components/Center/Center.js","./AppBar/AppBar":"components/AppBar/AppBar.js","./NavigationDrawer/NavigationDrawer":"components/NavigationDrawer/NavigationDrawer.js","./Container/Container":"components/Container/Container.js"}],"containers/Notes/NotesContext.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30395,12 +30546,7 @@ var withNotes = function withNotes(Component) {
 
 var _default = withNotes;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","./NotesContext":"containers/Notes/NotesContext.js"}],"components/PageLayout/page-layout.scss":[function(require,module,exports) {
-var reloadCSS = require('_css_loader');
-
-module.hot.dispose(reloadCSS);
-module.hot.accept(reloadCSS);
-},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"components/PageLayout/PageLayout.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","./NotesContext":"containers/Notes/NotesContext.js"}],"containers/PageLayout/PageLayout.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30410,150 +30556,91 @@ exports.default = void 0;
 
 var _react = _interopRequireDefault(require("react"));
 
-var _AppBar = _interopRequireDefault(require("../AppBar/AppBar"));
+var _components = require("../../components");
 
-var _NavigationDrawer = _interopRequireDefault(require("../NavigationDrawer/NavigationDrawer"));
-
-var _withNotes = _interopRequireDefault(require("../../containers/Notes/withNotes"));
-
-require("./page-layout.scss");
+var _withNotes = _interopRequireDefault(require("../Notes/withNotes"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var PageLayout = function PageLayout(_ref) {
-  var children = _ref.children,
-      isLoading = _ref.isLoading,
-      savedHasError = _ref.savedHasError,
-      onSaveRetry = _ref.onSaveRetry,
-      onOpenMenu = _ref.onOpenMenu,
-      isMenuOpen = _ref.isMenuOpen,
-      onCloseMenu = _ref.onCloseMenu,
-      menu = _ref.menu;
-  return _react.default.createElement("div", null, _react.default.createElement(_AppBar.default, {
-    isLoading: isLoading,
-    savedHasError: savedHasError,
-    onSaveRetry: onSaveRetry,
-    onOpenMenu: onOpenMenu
-  }), _react.default.createElement("div", {
-    className: "container"
-  }, children), _react.default.createElement(_NavigationDrawer.default, {
-    menu: menu,
-    isOpen: isMenuOpen,
-    onCloseMenu: onCloseMenu
-  }));
-};
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var PageLayout =
+/*#__PURE__*/
+function (_React$Component) {
+  _inherits(PageLayout, _React$Component);
+
+  function PageLayout() {
+    var _getPrototypeOf2;
+
+    var _this;
+
+    var _temp;
+
+    _classCallCheck(this, PageLayout);
+
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _possibleConstructorReturn(_this, (_temp = _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(PageLayout)).call.apply(_getPrototypeOf2, [this].concat(args))), _this.state = {
+      isMenuOpen: false
+    }, _this.handleOpenMenu = function () {
+      _this.setState({
+        isMenuOpen: true
+      });
+    }, _this.handleCloseMenu = function () {
+      _this.setState({
+        isMenuOpen: false
+      });
+    }, _temp));
+  }
+
+  _createClass(PageLayout, [{
+    key: "render",
+    value: function render() {
+      var _this$props = this.props,
+          children = _this$props.children,
+          isLoading = _this$props.isLoading,
+          savedHasError = _this$props.savedHasError,
+          onSaveRetry = _this$props.onSaveRetry,
+          menu = _this$props.menu;
+      var isMenuOpen = this.state.isMenuOpen;
+      return _react.default.createElement("div", null, _react.default.createElement(_components.AppBar, {
+        isLoading: isLoading,
+        savedHasError: savedHasError,
+        onSaveRetry: onSaveRetry,
+        onOpenMenu: this.handleOpenMenu
+      }), _react.default.createElement(_components.Container, null, children), _react.default.createElement(_components.NavigationDrawer, {
+        menu: menu,
+        isOpen: isMenuOpen,
+        onCloseMenu: this.handleCloseMenu
+      }));
+    }
+  }]);
+
+  return PageLayout;
+}(_react.default.Component);
 
 var _default = (0, _withNotes.default)(PageLayout);
 
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","../AppBar/AppBar":"components/AppBar/AppBar.js","../NavigationDrawer/NavigationDrawer":"components/NavigationDrawer/NavigationDrawer.js","../../containers/Notes/withNotes":"containers/Notes/withNotes.js","./page-layout.scss":"components/PageLayout/page-layout.scss"}],"components/Button/ButtonLink.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _react = _interopRequireDefault(require("react"));
-
-var _reactRouterDom = require("react-router-dom");
-
-require("./button.scss");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var ButtonLink = function ButtonLink(_ref) {
-  var children = _ref.children,
-      to = _ref.to;
-  return _react.default.createElement("div", null, _react.default.createElement(_reactRouterDom.Link, {
-    className: "button",
-    to: to
-  }, children));
-};
-
-var _default = ButtonLink;
-exports.default = _default;
-},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","./button.scss":"components/Button/button.scss"}],"components/index.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-Object.defineProperty(exports, "Error", {
-  enumerable: true,
-  get: function () {
-    return _Error.default;
-  }
-});
-Object.defineProperty(exports, "NewNote", {
-  enumerable: true,
-  get: function () {
-    return _NewNote.default;
-  }
-});
-Object.defineProperty(exports, "Note", {
-  enumerable: true,
-  get: function () {
-    return _Note.default;
-  }
-});
-Object.defineProperty(exports, "NoteList", {
-  enumerable: true,
-  get: function () {
-    return _NoteList.default;
-  }
-});
-Object.defineProperty(exports, "PageLayout", {
-  enumerable: true,
-  get: function () {
-    return _PageLayout.default;
-  }
-});
-Object.defineProperty(exports, "Header", {
-  enumerable: true,
-  get: function () {
-    return _Header.default;
-  }
-});
-Object.defineProperty(exports, "Button", {
-  enumerable: true,
-  get: function () {
-    return _Button.default;
-  }
-});
-Object.defineProperty(exports, "ButtonLink", {
-  enumerable: true,
-  get: function () {
-    return _ButtonLink.default;
-  }
-});
-Object.defineProperty(exports, "Center", {
-  enumerable: true,
-  get: function () {
-    return _Center.default;
-  }
-});
-
-var _Error = _interopRequireDefault(require("./Error/Error"));
-
-var _NewNote = _interopRequireDefault(require("./NewNote/NewNote"));
-
-var _Note = _interopRequireDefault(require("./Note/Note"));
-
-var _NoteList = _interopRequireDefault(require("./NoteList/NoteList"));
-
-var _PageLayout = _interopRequireDefault(require("./PageLayout/PageLayout"));
-
-var _Header = _interopRequireDefault(require("./Header/Header"));
-
-var _Button = _interopRequireDefault(require("./Button/Button"));
-
-var _ButtonLink = _interopRequireDefault(require("./Button/ButtonLink"));
-
-var _Center = _interopRequireDefault(require("./Center/Center"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"./Error/Error":"components/Error/Error.js","./NewNote/NewNote":"components/NewNote/NewNote.js","./Note/Note":"components/Note/Note.js","./NoteList/NoteList":"components/NoteList/NoteList.js","./PageLayout/PageLayout":"components/PageLayout/PageLayout.js","./Header/Header":"components/Header/Header.js","./Button/Button":"components/Button/Button.js","./Button/ButtonLink":"components/Button/ButtonLink.js","./Center/Center":"components/Center/Center.js"}],"containers/About/AboutPage.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","../../components":"components/index.js","../Notes/withNotes":"containers/Notes/withNotes.js"}],"containers/About/AboutPage.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -31287,7 +31374,7 @@ var _react = _interopRequireDefault(require("react"));
 
 var _reactRouterDom = require("react-router-dom");
 
-var _components = require("../../components");
+var _PageLayout = _interopRequireDefault(require("../PageLayout/PageLayout"));
 
 var _Routes = _interopRequireWildcard(require("../Routes"));
 
@@ -31299,74 +31386,15 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-var App =
-/*#__PURE__*/
-function (_React$Component) {
-  _inherits(App, _React$Component);
-
-  function App() {
-    var _getPrototypeOf2;
-
-    var _this;
-
-    var _temp;
-
-    _classCallCheck(this, App);
-
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    return _possibleConstructorReturn(_this, (_temp = _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(App)).call.apply(_getPrototypeOf2, [this].concat(args))), _this.state = {
-      isMenuOpen: false
-    }, _this.handleOpenMenu = function () {
-      _this.setState({
-        isMenuOpen: true
-      });
-    }, _this.handleCloseMenu = function () {
-      _this.setState({
-        isMenuOpen: false
-      });
-    }, _temp));
-  }
-
-  _createClass(App, [{
-    key: "render",
-    value: function render() {
-      var isMenuOpen = this.state.isMenuOpen;
-      return _react.default.createElement(_reactRouterDom.BrowserRouter, null, _react.default.createElement(_SettingsProvider.default, null, _react.default.createElement(_NotesProvider.default, null, _react.default.createElement(_components.PageLayout, {
-        isMenuOpen: isMenuOpen,
-        menu: _Routes.menu,
-        onOpenMenu: this.handleOpenMenu,
-        onCloseMenu: this.handleCloseMenu
-      }, _react.default.createElement(_Routes.default, null)))));
-    }
-  }]);
-
-  return App;
-}(_react.default.Component);
+var App = function App() {
+  return _react.default.createElement(_reactRouterDom.BrowserRouter, null, _react.default.createElement(_SettingsProvider.default, null, _react.default.createElement(_NotesProvider.default, null, _react.default.createElement(_PageLayout.default, {
+    menu: _Routes.menu
+  }, _react.default.createElement(_Routes.default, null)))));
+};
 
 var _default = App;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","../../components":"components/index.js","../Routes":"containers/Routes.js","../Settings/SettingsProvider":"containers/Settings/SettingsProvider.js","../Notes/NotesProvider":"containers/Notes/NotesProvider.js"}],"index.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","../PageLayout/PageLayout":"containers/PageLayout/PageLayout.js","../Routes":"containers/Routes.js","../Settings/SettingsProvider":"containers/Settings/SettingsProvider.js","../Notes/NotesProvider":"containers/Notes/NotesProvider.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
 var _react = _interopRequireDefault(require("react"));
@@ -31408,7 +31436,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "38617" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "37393" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
