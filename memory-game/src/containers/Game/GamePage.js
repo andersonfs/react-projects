@@ -1,37 +1,46 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { Board, Card } from "../../components";
-import { selectCard } from "../../store/acions";
+import { Board, Card, VictoryDialog } from "../../components";
+import { selectCard, closeVictoryDialog, startGame } from "../../store/actions";
 
-const GamePage = ({ cards, onCardClick }) => (
-  <Board>
-    {cards.map(card => (
-      <Card
-        key={card.key}
-        name={card.name}
-        isActive={card.isActive}
-        onClick={() => {
-          onCardClick(card.key);
-        }}
-      />
-    ))}
-  </Board>
+const GamePage = ({
+  cards,
+  onCardClick,
+  isVictoryDialogOpen,
+  onCloseVicoryDialog,
+  onStartGame
+}) => (
+  <>
+    <Board>
+      {cards.map(card => (
+        <Card
+          key={card.key}
+          name={card.name}
+          isActive={card.isActive}
+          onClick={() => {
+            onCardClick(card.key);
+          }}
+        />
+      ))}
+    </Board>
+    <VictoryDialog
+      isOpen={isVictoryDialogOpen}
+      onClose={onCloseVicoryDialog}
+      onGameRestart={onStartGame}
+    />
+  </>
 );
 
 const mapStateToProps = state => ({
-  cards: state.cards
+  cards: state.cards,
+  isVictoryDialogOpen: state.isVictoryDialogOpen
 });
 
-// const mapDispatchToPropos = dispatch => ({
-//   onCardClick: card => {
-//     //dispatch({ type: "SELECT_CARD", key: card.key });
-//     dispatch(selectCard(card.key));
-//   }
-// });
-
 const mapDispatchToPropos = {
-  onCardClick: selectCard
+  onCardClick: selectCard,
+  onCloseVicoryDialog: closeVictoryDialog,
+  onStartGame: startGame
 };
 
 export default connect(

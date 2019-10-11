@@ -1,6 +1,12 @@
 import { select, put, delay, takeEvery } from "redux-saga/effects";
 
-import { SELECT_CARD, LOCK, OPEN_CARD, SET_MATCH, CLOSE_CARDS } from "./acions";
+import {
+  SELECT_CARD,
+  LOCK,
+  OPEN_CARD,
+  SET_MATCH,
+  CLOSE_CARDS
+} from "./actions";
 
 function* selectCard(action) {
   const { key } = action;

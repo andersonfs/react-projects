@@ -1,19 +1,38 @@
-import { LOCK, OPEN_CARD, SET_MATCH, CLOSE_CARDS } from "./acions";
+import {
+  LOCK,
+  OPEN_CARD,
+  SET_MATCH,
+  CLOSE_CARDS,
+  CLOSE_VICTORY_DIALOG,
+  START_GAME
+} from "./actions";
+import ListBuilder from "../builders/ListBuilder";
 
 const initialState = {
   isLocked: false,
-  cards: [
-    { id: 1, key: 1, name: "Carta 1", isActive: false, hasMatch: false },
-    { id: 2, key: 2, name: "Carta 2", isActive: false, hasMatch: false },
-    { id: 3, key: 3, name: "Carta 3", isActive: false, hasMatch: false },
-    { id: 1, key: 4, name: "Carta 1", isActive: false, hasMatch: false },
-    { id: 2, key: 5, name: "Carta 2", isActive: false, hasMatch: false },
-    { id: 3, key: 6, name: "Carta 3", isActive: false, hasMatch: false }
-  ]
+  isVictoryDialogOpen: false,
+  cards: new ListBuilder()
+    .createList(3)
+    .shuffle()
+    .build()
 };
 
 const gameReducer = (state = initialState, action) => {
   switch (action.type) {
+    case START_GAME:
+      return {
+        ...state,
+        isVictoryDialogOpen: false,
+        cards: new ListBuilder()
+          .createList(3)
+          .shuffle()
+          .build()
+      };
+    case CLOSE_VICTORY_DIALOG:
+      return {
+        ...state,
+        isVictoryDialogOpen: false
+      };
     case LOCK:
       return {
         ...state,
@@ -31,12 +50,18 @@ const gameReducer = (state = initialState, action) => {
     }
     case SET_MATCH: {
       const cards = state.cards.slice();
+      let isVictoryDialogOpen = false;
 
       cards[action.index1].hasMatch = true;
       cards[action.index2].hasMatch = true;
 
+      if (cards.every(c => c.hasMatch)) {
+        isVictoryDialogOpen = true;
+      }
+
       return {
         ...state,
+        isVictoryDialogOpen,
         cards
       };
     }
