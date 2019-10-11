@@ -1,32 +1,17 @@
-import { createStore } from "redux";
+import { createStore, applyMiddleware } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
+import createSagaMiddleware from "redux-saga";
 
-const initialState = {
-  cards: [
-    { id: 1, key: 1, name: "Carta 1" },
-    { id: 2, key: 2, name: "Carta 2" },
-    { id: 3, key: 3, name: "Carta 3" }
-  ]
-};
+import gameReducer from "./reducers";
+import gameSaga from "./sagas";
 
-const gameReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case "SELECT_CARD":
-      const cards = state.cards.slice();
-      const index = cards.findIndex(c => c.key === action.key);
+const sagaMiddleware = createSagaMiddleware();
 
-      if (index > -1) {
-        cards[index].isActive = true;
-      }
-      return {
-        ...state,
-        cards
-      };
-    default:
-      return state;
-  }
-};
+const store = createStore(
+  gameReducer,
+  composeWithDevTools(applyMiddleware(sagaMiddleware))
+);
 
-const store = createStore(gameReducer, composeWithDevTools());
+sagaMiddleware.run(gameSaga);
 
 export default store;

@@ -1,7 +1,8 @@
-import React, { Component } from "react";
+import React from "react";
 import { connect } from "react-redux";
 
 import { Board, Card } from "../../components";
+import { selectCard } from "../../store/acions";
 
 const GamePage = ({ cards, onCardClick }) => (
   <Board>
@@ -11,7 +12,7 @@ const GamePage = ({ cards, onCardClick }) => (
         name={card.name}
         isActive={card.isActive}
         onClick={() => {
-          onCardClick(card);
+          onCardClick(card.key);
         }}
       />
     ))}
@@ -22,11 +23,16 @@ const mapStateToProps = state => ({
   cards: state.cards
 });
 
-const mapDispatchToPropos = dispatch => ({
-  onCardClick: card => {
-    dispatch({ type: "SELECT_CARD", key: card.key });
-  }
-});
+// const mapDispatchToPropos = dispatch => ({
+//   onCardClick: card => {
+//     //dispatch({ type: "SELECT_CARD", key: card.key });
+//     dispatch(selectCard(card.key));
+//   }
+// });
+
+const mapDispatchToPropos = {
+  onCardClick: selectCard
+};
 
 export default connect(
   mapStateToProps,
